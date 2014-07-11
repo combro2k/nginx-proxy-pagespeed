@@ -68,6 +68,7 @@ RUN mkdir -p /etc/nginx/ssl
 
 #Add custom nginx.conf file
 ADD nginx.conf /etc/nginx/nginx.conf
+ADD pagespeed.conf /etc/nginx/pagespeed.conf
 ADD proxy_params /etc/nginx/proxy_params
 
 WORKDIR /etc/nginx/ssl

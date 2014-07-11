@@ -1,8 +1,10 @@
 server {
 	listen 80 default_server;
+
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
 	error_log /proc/self/fd/2;
 	access_log /proc/self/fd/1;
+
 	return 503;
 }
 
@@ -74,10 +76,10 @@ server {
             {{ end }}
         {{ end }}
 
-        location / {
-            proxy_pass http://{{ $host }};
-            include /etc/nginx/proxy_params;
-        }
+        include pagespeed.conf;
+
+        # The target subject
+        pagespeed Domain {{ $host }};
     }
 
     server {
@@ -89,7 +91,6 @@ server {
         {{ if exists $host }}
         ssl_certificate /etc/nginx/ssl/{{ $host }}/ssl.crt;
         ssl_certificate_key /etc/nginx/ssl/{{ $host }}/ssl.key;
-
 
         resolver 8.8.8.8 8.8.4.4;
         ssl_stapling on;
@@ -114,6 +115,10 @@ server {
         add_header Strict-Transport-Security max-age=15768000;
         add_header X-Content-Type-Options nosniff;
 
+        include pagespeed.conf;
+
+        # The target subject
+        pagespeed Domain {{ $host }};
 
         location / {
             proxy_pass http://{{ $host }};
@@ -176,6 +181,11 @@ server {
 
     add_header Strict-Transport-Security max-age=15768000;
     add_header X-Content-Type-Options nosniff;
+
+    include pagespeed.conf;
+
+    # The target subject
+    pagespeed Domain {{ $host }};
 
     location / {
         proxy_pass https://ssl-{{ $host }};
