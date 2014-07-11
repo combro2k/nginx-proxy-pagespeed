@@ -76,10 +76,12 @@ server {
             {{ end }}
         {{ end }}
 
+        {{ range $index, $value := $containers }}
+            {{ if !$value.ENV.NO_PAGESPEED }}
         include pagespeed.conf;
-
-        # The target subject
         pagespeed Domain {{ $host }};
+            {{ end }}
+        {{ end }}
     }
 
     server {
@@ -115,10 +117,12 @@ server {
         add_header Strict-Transport-Security max-age=15768000;
         add_header X-Content-Type-Options nosniff;
 
+        {{ range $index, $value := $containers }}
+            {{ if !$value.ENV.NO_PAGESPEED }}
         include pagespeed.conf;
-
-        # The target subject
         pagespeed Domain {{ $host }};
+            {{ end }}
+        {{ end }}
 
         location / {
             proxy_pass http://{{ $host }};
@@ -182,10 +186,12 @@ server {
     add_header Strict-Transport-Security max-age=15768000;
     add_header X-Content-Type-Options nosniff;
 
+    {{ range $index, $value := $containers }}
+            {{ if !$value.ENV.NO_PAGESPEED }}
     include pagespeed.conf;
-
-    # The target subject
     pagespeed Domain {{ $host }};
+            {{ end }}
+    {{ end }}
 
     location / {
         proxy_pass https://ssl-{{ $host }};
