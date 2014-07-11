@@ -57,8 +57,8 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
 	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
-	--with-sha1=/usr/include/openssl \
- 	--with-md5=/usr/include/openssl \
+	--with-sha1='../${OPENSSL_VERSION}' \
+ 	--with-md5='../${OPENSSL_VERSION}' \
 	--with-openssl='../${OPENSSL_VERSION}' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
