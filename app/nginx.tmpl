@@ -77,10 +77,10 @@ server {
         {{ end }}
 
         {{ range $index, $value := $containers }}
-            {{ if !$value.ENV.NO_PAGESPEED }}
+            {{ if $value.ENV.PAGESPEED }}
         include pagespeed.conf;
         pagespeed Domain {{ $host }};
-            {{ end }}
+                {{ end }}
         {{ end }}
     }
 
@@ -118,10 +118,10 @@ server {
         add_header X-Content-Type-Options nosniff;
 
         {{ range $index, $value := $containers }}
-            {{ if !$value.ENV.NO_PAGESPEED }}
+            {{ if $value.ENV.PAGESPEED }}
         include pagespeed.conf;
         pagespeed Domain {{ $host }};
-            {{ end }}
+                {{ end }}
         {{ end }}
 
         location / {
@@ -187,7 +187,7 @@ server {
     add_header X-Content-Type-Options nosniff;
 
     {{ range $index, $value := $containers }}
-            {{ if !$value.ENV.NO_PAGESPEED }}
+            {{ if $value.ENV.PAGESPEED }}
     include pagespeed.conf;
     pagespeed Domain {{ $host }};
             {{ end }}
