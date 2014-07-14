@@ -90,7 +90,7 @@ server {
         server_name {{ $host }};
         proxy_buffering off;
 
-        {{ if exists "/etc/nginx/ssl/" + $host + "/ssl.crt" }}
+        {{ if SSLcertExists $host }}
         ssl_certificate /etc/nginx/ssl/{{ $host }}/ssl.crt;
         ssl_certificate_key /etc/nginx/ssl/{{ $host }}/ssl.key;
 
@@ -159,7 +159,7 @@ server {
     server_name {{ $host }};
     proxy_buffering off;
 
-    {{ if exists "/etc/nginx/ssl/" + $host + "/ssl.crt" }}
+    {{ if SSLcertExists $host }}
     ssl_certificate /etc/nginx/ssl/{{ $host }}/ssl.crt;
     ssl_certificate_key /etc/nginx/ssl/{{ $host }}/ssl.key;
 
