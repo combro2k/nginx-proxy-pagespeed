@@ -82,6 +82,11 @@ server {
         pagespeed Domain {{ $host }};
                 {{ end }}
         {{ end }}
+
+        location / {
+            proxy_pass http://{{ $host }};
+            include /etc/nginx/proxy_params;
+        }
     }
 
     server {
