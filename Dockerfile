@@ -66,7 +66,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-openssl='../${LIBRESSL_VERSION}' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN cd /usr/src/${LIBRESSL_VERSION}/ && echo ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+RUN cd /usr/src/${LIBRESSL_VERSION}/ && ./config && make && ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 RUN mkdir -p /etc/nginx/ssl
 

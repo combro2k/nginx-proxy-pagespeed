@@ -3,8 +3,6 @@ if  [ -d ".openssl" ]; then
   rm -Rf .openssl
 fi
 
-make
-
 mkdir -p .openssl/lib
 
 cp crypto/.libs/libcrypto.a ssl/.libs/libssl.a .openssl/lib
