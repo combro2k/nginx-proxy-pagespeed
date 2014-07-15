@@ -28,6 +28,7 @@ RUN cd ${MODULESDIR} && \
     tar -xzvf ${NPS_VERSION}.tar.gz
 
 ADD boringssl-config /usr/src/boringssl/config
+ADD after.sh /usr/src/boringssl/before.sh
 ADD after.sh /usr/src/boringssl/after.sh
 RUN chmod +x /usr/src/boringssl/config /usr/src/boringssl/after.sh
 
@@ -65,7 +66,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-openssl='../boringssl' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN cd /usr/src/boringssl/ && ./config && make && ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+RUN cd /usr/src/boringssl/ && ./before.sh && ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 RUN mkdir -p /etc/nginx/ssl
 
