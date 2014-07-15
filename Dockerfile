@@ -8,16 +8,15 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 RUN echo deb http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
 RUN echo deb-src http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
 
-RUN apt-get update &&  apt-get install nano -y
+RUN apt-get update &&  apt-get install nano git -y
 RUN apt-get upgrade -y
 
 ENV NGINX_VERSION 1.6.0
-ENV LIBRESSL_VERSION libressl-2.0.1
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.8.31.4
 
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
-RUN cd /usr/src/ && wget http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${LIBRESSL_VERSION}.tar.gz && tar xvzf ${LIBRESSL_VERSION}.tar.gz
+RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
 
 RUN apt-get update && apt-get install -y build-essential zlib1g-dev libpcre3 libpcre3-dev unzip
 RUN mkdir ${MODULESDIR}
@@ -28,9 +27,9 @@ RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz
 
-ADD libressl-config /usr/src/${LIBRESSL_VERSION}/config
-ADD after.sh /usr/src/${LIBRESSL_VERSION}/after.sh
-RUN chmod +x /usr/src/${LIBRESSL_VERSION}/config /usr/src/${LIBRESSL_VERSION}/after.sh
+ADD boringssl-config /usr/src/boringssl/config
+ADD after.sh /usr/src/boringssl/after.sh
+RUN chmod +x /usr/src/boringssl/config /usr/src/boringssl/after.sh
 
 
 # Compile nginx
@@ -61,12 +60,12 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
 	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
-	--with-sha1='../${LIBRESSL_VERSION}' \
- 	--with-md5='../${LIBRESSL_VERSION}' \
-	--with-openssl='../${LIBRESSL_VERSION}' \
+	--with-sha1='../boringssl' \
+ 	--with-md5='../boringssl' \
+	--with-openssl='../boringssl' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN cd /usr/src/${LIBRESSL_VERSION}/ && ./config && make && ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+RUN cd /usr/src/boringssl/ && ./config && make && ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 RUN mkdir -p /etc/nginx/ssl
 
