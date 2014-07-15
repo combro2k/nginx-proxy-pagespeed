@@ -1,0 +1,4 @@
+#! /bin/bash
+# you can skip LDFLAGS=-lrt when using libressl 2.0.1
+
+./configure

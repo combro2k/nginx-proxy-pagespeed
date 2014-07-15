@@ -12,12 +12,12 @@ RUN apt-get update &&  apt-get install nano -y
 RUN apt-get upgrade -y
 
 ENV NGINX_VERSION 1.7.3
-ENV OPENSSL_VERSION openssl-1.0.1h
+ENV LIBRESSL_VERSION libressl-2.0.1
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.8.31.4
 
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
-RUN cd /usr/src/ && wget http://www.openssl.org/source/${OPENSSL_VERSION}.tar.gz && tar xvzf ${OPENSSL_VERSION}.tar.gz
+RUN cd /usr/src/ && wget http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${LIBRESSL_VERSION}.tar.gz && tar xvzf ${LIBRESSL_VERSION}.tar.gz
 
 RUN apt-get update && apt-get install -y build-essential zlib1g-dev libpcre3 libpcre3-dev unzip
 RUN mkdir ${MODULESDIR}
@@ -27,6 +27,10 @@ RUN cd ${MODULESDIR} && \
     cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz
+
+ADD libressl-config /usr/src/${LIBRESSL_VERSION}/config
+ADD after.sh /usr/src/${LIBRESSL_VERSION}/after.sh
+RUN chmod +x /usr/src/${LIBRESSL_VERSION}/config /usr/src/${LIBRESSL_VERSION}/after.sh
 
 
 # Compile nginx
@@ -57,12 +61,12 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
 	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
-	--with-sha1='../${OPENSSL_VERSION}' \
- 	--with-md5='../${OPENSSL_VERSION}' \
-	--with-openssl='../${OPENSSL_VERSION}' \
+	--with-sha1='../${LIBRESSL_VERSION}' \
+ 	--with-md5='../${LIBRESSL_VERSION}' \
+	--with-openssl='../${LIBRESSL_VERSION}' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+RUN cd /usr/src/${LIBRESSL_VERSION}/ && echo ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 RUN mkdir -p /etc/nginx/ssl
 
@@ -76,7 +80,7 @@ WORKDIR /etc/nginx/ssl
 RUN openssl genrsa  -out server.key 4096
 RUN openssl req -new -batch -key server.key -out server.csr
 RUN openssl x509 -req -days 10000 -in server.csr -signkey server.key -out server.crt
-RUN openssl dhparam -out dhparam.pem 4096
+#RUN openssl dhparam -out dhparam.pem 4096
 
 RUN mkdir -p /etc/nginx/sites-enabled
 
