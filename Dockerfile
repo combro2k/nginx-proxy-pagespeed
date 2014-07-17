@@ -32,7 +32,9 @@ ADD before.sh /usr/src/boringssl/before.sh
 RUN chmod +x /usr/src/boringssl/config /usr/src/boringssl/before.sh
 
 # Compile nginx
-RUN cd /usr/src/boringssl/ && ./before.sh && cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
+RUN cd /usr/src/boringssl && ./before.sh
+
+RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
@@ -59,12 +61,12 @@ RUN cd /usr/src/boringssl/ && ./before.sh && cd /usr/src/nginx-${NGINX_VERSION} 
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
 	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
-	--with-sha1='../boringssl/build' \
- 	--with-md5='../boringssl/build' \
-	--with-openssl='../boringssl/build' \
+	--with-sha1='../boringssl' \
+ 	--with-md5='../boringssl' \
+	--with-openssl='../boringssl' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN make && touch /usr/src/boringssl/.openssl/include/ssl.h && make install
+RUN touch /usr/src/boringssl/.openssl/include/ssl.h && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 RUN mkdir -p /etc/nginx/ssl
 
