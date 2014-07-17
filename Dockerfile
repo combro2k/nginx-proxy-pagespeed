@@ -18,7 +18,7 @@ ENV NPS_VERSION 1.8.31.4
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
 
-RUN apt-get update && apt-get install -y build-essential zlib1g-dev libpcre3 libpcre3-dev unzip
+RUN apt-get update && apt-get install -y build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip
 RUN mkdir ${MODULESDIR}
 RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
@@ -28,13 +28,11 @@ RUN cd ${MODULESDIR} && \
     tar -xzvf ${NPS_VERSION}.tar.gz
 
 ADD boringssl-config /usr/src/boringssl/config
-ADD after.sh /usr/src/boringssl/before.sh
-ADD after.sh /usr/src/boringssl/after.sh
-RUN chmod +x /usr/src/boringssl/config /usr/src/boringssl/after.sh /usr/src/boringssl/before.sh
-
+ADD before.sh /usr/src/boringssl/before.sh
+RUN chmod +x /usr/src/boringssl/config /usr/src/boringssl/before.sh
 
 # Compile nginx
-RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
+RUN cd /usr/src/boringssl/ && ./before.sh && cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
@@ -61,12 +59,12 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
 	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
-	--with-sha1='../boringssl' \
- 	--with-md5='../boringssl' \
-	--with-openssl='../boringssl' \
+	--with-sha1='../boringssl/build' \
+ 	--with-md5='../boringssl/build' \
+	--with-openssl='../boringssl/build' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN cd /usr/src/boringssl/ && ./before.sh && ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+RUN make && touch /usr/src/boringssl/.openssl/include/ssl.h && make install
 
 RUN mkdir -p /etc/nginx/ssl
 
