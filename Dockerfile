@@ -30,7 +30,7 @@ RUN cd ${MODULESDIR} && \
 ADD boringssl-config /usr/src/boringssl/config
 ADD after.sh /usr/src/boringssl/before.sh
 ADD after.sh /usr/src/boringssl/after.sh
-RUN chmod +x /usr/src/boringssl/config /usr/src/boringssl/after.sh
+RUN chmod +x /usr/src/boringssl/config /usr/src/boringssl/after.sh /usr/src/boringssl/before.sh
 
 
 # Compile nginx
