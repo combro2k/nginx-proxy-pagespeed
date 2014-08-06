@@ -12,7 +12,7 @@ RUN apt-get update &&  apt-get install nano -y
 RUN apt-get upgrade -y
 
 ENV NGINX_VERSION 1.6.1
-ENV LIBRESSL_VERSION libressl-2.0.2
+ENV LIBRESSL_VERSION libressl-2.0.4
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.8.31.4
 
