@@ -1,5 +1,6 @@
 server {
-	listen 80 default_server;
+	listen [::]:80 default_server;
+	
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
 	error_log /proc/self/fd/2;
@@ -17,7 +18,7 @@ ssl_ciphers "EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA384:EECDH+ECDSA
 ssl_prefer_server_ciphers   on;
 
 server {
-	listen 443 ssl spdy;
+	listen [::]:443 ssl spdy;
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
 	error_log /proc/self/fd/2;
@@ -65,6 +66,8 @@ server {
     }
 
     server {
+    	listen [::]:80;
+    	
         gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
         server_name  {{ $host }};
@@ -90,7 +93,7 @@ server {
     }
 
     server {
-        listen 443 ssl spdy;
+        listen [::]:443 ssl spdy;
 
         server_name {{ $host }};
         proxy_buffering off;
@@ -159,7 +162,7 @@ server {
 }
 
 server {
-    listen 443 ssl spdy;
+    listen [::]:443 ssl spdy;
 
     server_name {{ $host }};
     proxy_buffering off;
