@@ -1,6 +1,6 @@
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
+    listen 80 default_server;
+    listen [::]:80 ipv6only=on default_server;
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
 	error_log /proc/self/fd/2;
@@ -18,8 +18,8 @@ ssl_ciphers "ECDHE-RSA-CHACHA20-POLY1305 ECDHE-ECDSA-CHACHA20-POLY1305 EECDH+ECD
 ssl_prefer_server_ciphers   on;
 
 server {
-	listen 443 ssl spdy;
-	listen [::]:443 ssl spdy;
+    listen 443 ssl spdy;
+    listen [::]:443 ipv6only=on ssl spdy;
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
 	error_log /proc/self/fd/2;
@@ -67,9 +67,9 @@ server {
     }
 
     server {
-	listen 80;
-    	listen [::]:80;
-    
+        listen 80;
+        listen [::]:80;
+
         gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
         server_name  {{ $host }};
