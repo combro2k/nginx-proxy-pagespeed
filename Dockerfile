@@ -8,7 +8,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 RUN echo deb http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
 RUN echo deb-src http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
 
-RUN apt-get update &&  apt-get install nano git -y
+RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip -y
 RUN apt-get upgrade -y
 
 ENV NGINX_VERSION 1.7.4
@@ -18,7 +18,12 @@ ENV NPS_VERSION 1.8.31.4
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
 
-RUN apt-get update && apt-get install -y build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip
+# BoringSSL specifics
+RUN cd /usr/src/ && wget --no-check-certificate https://calomel.org/boringssl_freebsd10_calomel.org.patch && cd /usr/src/boringssl && patch < ../boringssl_freebsd10_calomel.org.patch
+RUN cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd ..
+RUN cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd ..
+RUN cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
+
 RUN mkdir ${MODULESDIR}
 RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
@@ -35,7 +40,6 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--http-log-path=/var/log/nginx/access.log \
 	--pid-path=/var/run/nginx.pid \
 	--lock-path=/var/run/nginx.lock \
-	--with-http_ssl_module \
 	--with-http_realip_module \
 	--with-http_addition_module \
 	--with-http_sub_module \
@@ -47,17 +51,13 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-http_random_index_module \
 	--with-http_secure_link_module \
 	--with-http_stub_status_module \
-	--with-mail \
-	--with-mail_ssl_module \
 	--with-file-aio \
-	--with-http_spdy_module \
-	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
-	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
-	--with-sha1='../boringssl' \
- 	--with-md5='../boringssl' \
-	--with-openssl='../boringssl' \
-	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
+	--with-http_ssl_module \
+	--with-http_spdy_module \
+	--with-cc-opt="-I ../boringssl/.openssl/include/ -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2" \
+	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
+    --add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
 RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
