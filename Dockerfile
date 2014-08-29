@@ -27,13 +27,6 @@ RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz
 
-ADD boringssl-config /usr/src/boringssl/config
-ADD before.sh /usr/src/boringssl/before.sh
-RUN chmod +x /usr/src/boringssl/config /usr/src/boringssl/before.sh
-
-# Compile nginx
-RUN cd /usr/src/boringssl && ./before.sh
-
 RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
@@ -80,7 +73,7 @@ WORKDIR /etc/nginx/ssl
 RUN openssl genrsa  -out server.key 4096
 RUN openssl req -new -batch -key server.key -out server.csr
 RUN openssl x509 -req -days 10000 -in server.csr -signkey server.key -out server.crt
-RUN openssl dhparam -out dhparam.pem 4096
+#RUN openssl dhparam -out dhparam.pem 4096
 
 RUN mkdir -p /etc/nginx/sites-enabled
 
