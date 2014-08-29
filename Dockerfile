@@ -8,7 +8,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 RUN echo deb http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
 RUN echo deb-src http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
 
-RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip -y
+RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip cmake -y
 RUN apt-get upgrade -y
 
 ENV NGINX_VERSION 1.7.4
@@ -73,7 +73,7 @@ WORKDIR /etc/nginx/ssl
 RUN openssl genrsa  -out server.key 4096
 RUN openssl req -new -batch -key server.key -out server.csr
 RUN openssl x509 -req -days 10000 -in server.csr -signkey server.key -out server.crt
-RUN openssl dhparam -out dhparam.pem 4096
+#RUN openssl dhparam -out dhparam.pem 4096
 
 RUN mkdir -p /etc/nginx/sites-enabled
 
