@@ -89,4 +89,4 @@ ADD app/docker-gen docker-gen
 EXPOSE 80 443
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
-CMD ["forego", "start", "-r"]
+CMD ["/app/init.sh"]
