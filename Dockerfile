@@ -11,7 +11,7 @@ RUN echo deb-src http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/a
 RUN apt-get update &&  apt-get install nano git -y
 RUN apt-get upgrade -y
 
-ENV NGINX_VERSION 1.6.0
+ENV NGINX_VERSION 1.7.4
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.8.31.4
 
@@ -66,7 +66,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-openssl='../boringssl' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN touch /usr/src/boringssl/.openssl/include/ssl.h && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 RUN mkdir -p /etc/nginx/ssl
 
