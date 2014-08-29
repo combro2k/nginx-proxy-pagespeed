@@ -101,8 +101,8 @@ server {
         ssl_certificate_key /etc/nginx/ssl/{{ $host }}/ssl.key;
 
         resolver 8.8.8.8 8.8.4.4;
-        ssl_stapling on;
-        ssl_stapling_verify on;
+        #ssl_stapling on;
+        #ssl_stapling_verify on;
         resolver_timeout 5s;
         {{ end }}
 
@@ -171,8 +171,8 @@ server {
     ssl_certificate_key /etc/nginx/ssl/{{ $host }}/ssl.key;
 
     resolver 8.8.8.8 8.8.4.4;
-    ssl_stapling on;
-    ssl_stapling_verify on;
+    #ssl_stapling on;
+    #ssl_stapling_verify on;
     resolver_timeout 5s;
     {{ end }}
 
