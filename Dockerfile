@@ -26,6 +26,8 @@ RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz
 
+ADD boringssl.patch
+
 RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
@@ -53,7 +55,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
     --add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+RUN cd /usr/src/nginx-${NGINX_VERSION} && patch < boringssl.patch && make && make install
 
 RUN mkdir -p /etc/nginx/ssl
 
