@@ -5,7 +5,7 @@ MAINTAINER Jason Wilder jwilder@litl.com
 RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget -y 
 RUN apt-get dist-upgrade -y
 
-ENV NGINX_VERSION 1.7.4
+ENV NGINX_VERSION 1.7.5
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.8.31.4
 
@@ -25,8 +25,6 @@ RUN cd ${MODULESDIR} && \
     cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz
-
-ADD boringssl.patch /usr/src
 
 RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
@@ -55,7 +53,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
     --add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
 
-RUN cd /usr/src/nginx-${NGINX_VERSION} && patch < ../boringssl.patch && make && make install
+RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 RUN mkdir -p /etc/nginx/ssl
 
