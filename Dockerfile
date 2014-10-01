@@ -5,7 +5,7 @@ MAINTAINER Jason Wilder jwilder@litl.com
 RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget -y 
 RUN apt-get dist-upgrade -y
 
-ENV NGINX_VERSION 1.7.5
+ENV NGINX_VERSION 1.7.6
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.8.31.4
 
@@ -67,7 +67,7 @@ WORKDIR /etc/nginx/ssl
 RUN openssl genrsa  -out server.key 4096
 RUN openssl req -new -batch -key server.key -out server.csr
 RUN openssl x509 -req -days 10000 -in server.csr -signkey server.key -out server.crt
-RUN openssl dhparam -out dhparam.pem 4096
+#RUN openssl dhparam -out dhparam.pem 4096
 
 RUN mkdir -p /etc/nginx/sites-enabled
 
