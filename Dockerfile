@@ -14,7 +14,7 @@ RUN apt-get upgrade -y
 ENV NGINX_VERSION 1.6.2
 ENV LIBRESSL_VERSION libressl-2.0.5
 ENV MODULESDIR /usr/src/nginx-modules
-ENV NPS_VERSION 1.8.31.4
+ENV NPS_VERSION 1.9.32.1
 
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && wget http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${LIBRESSL_VERSION}.tar.gz && tar xvzf ${LIBRESSL_VERSION}.tar.gz
