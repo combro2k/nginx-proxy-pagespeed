@@ -7,7 +7,7 @@ RUN apt-get dist-upgrade -y
 
 ENV NGINX_VERSION 1.7.6
 ENV MODULESDIR /usr/src/nginx-modules
-ENV NPS_VERSION 1.8.31.4
+ENV NPS_VERSION 1.9.32.1
 
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
