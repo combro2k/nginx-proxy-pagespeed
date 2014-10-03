@@ -134,6 +134,7 @@ server {
             {{ if $value.Env.PAGESPEED }}
         include pagespeed.conf;
         pagespeed Domain {{ $host }};
+        pagespeed MapOriginDomain "http://{{ $host }}" "https://{{ $host }}";
                 {{ end }}
         {{ end }}
 
