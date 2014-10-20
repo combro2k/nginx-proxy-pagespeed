@@ -11,6 +11,8 @@ ENV NPS_VERSION 1.9.32.1
 
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
+RUN cd /usr/src/ && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git
+RUN cd /usr/src/ && git clone https://github.com/openresty/headers-more-nginx-module.git
 
 # BoringSSL specifics
 RUN cd /usr/src/ && wget --no-check-certificate https://calomel.org/boringssl_freebsd10_calomel.org.patch && cd /usr/src/boringssl && patch < ../boringssl_freebsd10_calomel.org.patch
@@ -51,7 +53,9 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-http_spdy_module \
 	--with-cc-opt="-I ../boringssl/.openssl/include/ -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2" \
 	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
-    --add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
+    	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
+    	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module
+    	--add-module=${MODULESDIR}/headers-more-nginx-module
 
 RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
