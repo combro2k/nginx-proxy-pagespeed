@@ -9,6 +9,8 @@ ENV NGINX_VERSION 1.7.6
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.1
 
+RUN mkdir -p ${MODULESDIR}
+
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
 RUN cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git
@@ -20,7 +22,6 @@ RUN cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd 
 RUN cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd ..
 RUN cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
 
-RUN mkdir ${MODULESDIR}
 RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
     unzip release-${NPS_VERSION}-beta.zip && \
