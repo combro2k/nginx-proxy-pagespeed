@@ -53,8 +53,8 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-http_spdy_module \
 	--with-cc-opt="-I ../boringssl/.openssl/include/ -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2" \
 	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
-    	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
-    	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module
+    	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
+    	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
     	--add-module=${MODULESDIR}/headers-more-nginx-module
 
 RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
