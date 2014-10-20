@@ -11,8 +11,8 @@ ENV NPS_VERSION 1.9.32.1
 
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
-RUN cd /usr/src/ && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git
-RUN cd /usr/src/ && git clone https://github.com/openresty/headers-more-nginx-module.git
+RUN cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git
+RUN cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
 # BoringSSL specifics
 RUN cd /usr/src/ && wget --no-check-certificate https://calomel.org/boringssl_freebsd10_calomel.org.patch && cd /usr/src/boringssl && patch < ../boringssl_freebsd10_calomel.org.patch
