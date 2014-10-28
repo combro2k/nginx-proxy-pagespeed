@@ -11,8 +11,8 @@ RUN echo deb-src http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/a
 RUN apt-get update &&  apt-get install nano -y
 RUN apt-get upgrade -y
 
-ENV NGINX_VERSION 1.7.6
-ENV OPENSSL_VERSION openssl-1.0.1i
+ENV NGINX_VERSION 1.7.7
+ENV OPENSSL_VERSION openssl-1.0.1j
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.1 
 
