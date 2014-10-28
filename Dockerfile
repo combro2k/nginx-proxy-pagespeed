@@ -16,11 +16,14 @@ ENV OPENSSL_VERSION openssl-1.0.1j
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.1 
 
+RUN mkdir -p ${MODULESDIR}
+
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && wget http://www.openssl.org/source/${OPENSSL_VERSION}.tar.gz && tar xvzf ${OPENSSL_VERSION}.tar.gz
+RUN cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git
+RUN cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
 RUN apt-get update && apt-get install -y build-essential zlib1g-dev libpcre3 libpcre3-dev unzip
-RUN mkdir ${MODULESDIR}
 RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
     unzip release-${NPS_VERSION}-beta.zip && \
@@ -60,7 +63,9 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-sha1='../${OPENSSL_VERSION}' \
  	--with-md5='../${OPENSSL_VERSION}' \
 	--with-openssl='../${OPENSSL_VERSION}' \
-	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta
+	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
+    	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
+    	--add-module=${MODULESDIR}/headers-more-nginx-module
 
 RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
