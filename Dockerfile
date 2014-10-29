@@ -2,14 +2,9 @@ FROM ubuntu:14.04
 MAINTAINER Jason Wilder jwilder@litl.com
 
 # Install Nginx.
-RUN apt-get update
-RUN apt-get install -y wget
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
-RUN echo deb http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
-RUN echo deb-src http://nginx.org/packages/mainline/ubuntu trusty nginx > /etc/apt/sources.list.d/nginx-stable-trusty.list
-
-RUN apt-get update &&  apt-get install nano -y
-RUN apt-get upgrade -y
+# Install Nginx.
+RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget -y
+RUN apt-get dist-upgrade -y
 
 ENV NGINX_VERSION 1.7.7
 ENV LIBRESSL_VERSION libressl-2.1.1
