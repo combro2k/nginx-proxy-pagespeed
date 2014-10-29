@@ -2,7 +2,6 @@ FROM ubuntu:14.04
 MAINTAINER Jason Wilder jwilder@litl.com
 
 # Install Nginx.
-# Install Nginx.
 RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget -y
 RUN apt-get dist-upgrade -y
 
