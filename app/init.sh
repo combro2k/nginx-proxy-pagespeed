@@ -12,6 +12,14 @@ if [ ! -z "$IPV6GW" ]; then
 	ip -6 route add  default via "$IPV6GW" dev eth0
 fi
 
+if [[ ! -d "/data/config" ]]; then
+	mkdir -p /data/config
+fi
+
+if [[ ! -d "/data/ssl" ]]; then
+	mkdir -p /data/ssl
+fi
+
 if [[ ! -e "/data/config/pagespeed-extra.conf" ]]; then
         touch /data/config/pagespeed-extra.conf
 fi
