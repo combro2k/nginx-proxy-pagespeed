@@ -11,6 +11,7 @@ ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.2
 
 RUN mkdir -p ${MODULESDIR}
+RUN mkdir -p /data/{config,ssl}
 
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && wget http://www.openssl.org/source/${OPENSSL_VERSION}.tar.gz && tar xvzf ${OPENSSL_VERSION}.tar.gz
@@ -63,7 +64,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 
 RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
-RUN mkdir -p /etc/nginx/ssl
+RUN ln -s /data/ssl /etc/nginx/ssl
 
 #Add custom nginx.conf file
 ADD nginx.conf /etc/nginx/nginx.conf
@@ -91,4 +92,4 @@ ADD app/docker-gen docker-gen
 EXPOSE 80 443
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
-CMD ["forego", "start", "-r"]
+CMD ["/app/init.sh"]
