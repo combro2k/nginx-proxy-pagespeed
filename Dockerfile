@@ -5,7 +5,7 @@ MAINTAINER Jason Wilder jwilder@litl.com
 RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget -y 
 RUN apt-get dist-upgrade -y
 
-ENV NGINX_VERSION 1.7.7
+ENV NGINX_VERSION 1.7.8
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.2
 
