@@ -18,10 +18,10 @@ RUN cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_mem
 RUN cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
 # BoringSSL specifics
-#RUN cd /usr/src/ && wget --no-check-certificate https://calomel.org/boringssl_freebsd10_calomel.org.patch && cd /usr/src/boringssl && patch < ../boringssl_freebsd10_calomel.org.patch
-#RUN cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd ..
-#RUN cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd ..
-#RUN cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
+RUN cd /usr/src/ && wget --no-check-certificate https://calomel.org/boringssl_freebsd10_calomel.org.patch && cd /usr/src/boringssl && patch < ../boringssl_freebsd10_calomel.org.patch
+RUN cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd ..
+RUN cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd ..
+RUN cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
 
 RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
