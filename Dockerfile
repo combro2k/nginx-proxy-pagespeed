@@ -18,10 +18,10 @@ RUN cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_mem
 RUN cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
 # BoringSSL specifics
-RUN cd /usr/src/ && wget --no-check-certificate https://calomel.org/boringssl_freebsd10_calomel.org.patch && cd /usr/src/boringssl && patch < ../boringssl_freebsd10_calomel.org.patch
-RUN cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd ..
-RUN cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd ..
-RUN cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
+#RUN cd /usr/src/ && wget --no-check-certificate https://calomel.org/boringssl_freebsd10_calomel.org.patch && cd /usr/src/boringssl && patch < ../boringssl_freebsd10_calomel.org.patch
+#RUN cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd ..
+#RUN cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd ..
+#RUN cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
 
 RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
@@ -53,11 +53,11 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-ipv6 \
 	--with-http_ssl_module \
 	--with-http_spdy_module \
-	--with-cc-opt="-I ../boringssl/.compat/include/ -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2" \
-	--with-ld-opt="-L ../boringssl/.compat/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
-    	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
-    	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
-    	--add-module=${MODULESDIR}/headers-more-nginx-module
+	--with-cc-opt="-I ../boringssl/.openssl/include/ -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2" \
+	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
+	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
+	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
+	--add-module=${MODULESDIR}/headers-more-nginx-module
 
 RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
