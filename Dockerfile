@@ -84,6 +84,8 @@ RUN mkdir /app
 WORKDIR /app
 ADD ./app /app
 
+RUN chmod u+x /app/init.sh
+
 RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego
 RUN chmod u+x /usr/local/bin/forego
 
