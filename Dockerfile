@@ -18,6 +18,7 @@ RUN cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_mem
 RUN cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
 ADD boringssl.patch /usr/src/boringssl.patch
+ADD nginx.patch /usr/src/nginx.patch
 
 # BoringSSL specifics
 RUN cd /usr/src/ && cd /usr/src/boringssl && patch < ../boringssl.patch
@@ -32,7 +33,7 @@ RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz
 
-RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
+RUN cd /usr/src/nginx-${NGINX_VERSION} && patch < ../nginx.patch && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
