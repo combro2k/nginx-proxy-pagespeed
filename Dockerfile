@@ -33,7 +33,7 @@ RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz
 
-RUN cd /usr/src/nginx-${NGINX_VERSION} && patch < ../nginx.patch && ./configure \
+RUN cd /usr/src/nginx-${NGINX_VERSION} && patch src/event/ngx_event_openssl.c < ../nginx.patch && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
