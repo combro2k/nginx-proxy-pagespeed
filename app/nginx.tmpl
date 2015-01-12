@@ -3,8 +3,8 @@ server {
 
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
-	error_log /proc/self/fd/2;
-	access_log /proc/self/fd/1;
+	error_log /data/logs/error.log;
+	access_log /data/logs/access.log;
 
 	return 503;
 }
@@ -21,8 +21,8 @@ server {
 	listen [::]:443 ssl spdy;
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
-	error_log /proc/self/fd/2;
-	access_log /proc/self/fd/1;
+	error_log /data/logs/error.log;
+	access_log /data/logs/access.log;
 
 	ssl_ecdh_curve secp521r1;
 
