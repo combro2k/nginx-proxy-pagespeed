@@ -3,8 +3,8 @@ server {
     listen [::]:80 ipv6only=on default_server;
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
-	error_log /var/log/nginx/error.log;
-	access_log /var/log/nginx/access.log;
+	error_log /data/logs/error.log;
+	access_log /data/logs/access.log;
 
 	return 503;
 }
@@ -23,8 +23,8 @@ server {
     listen [::]:443 ipv6only=on ssl spdy;
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
-	error_log /var/log/nginx/error.log;
-	access_log /var/log/nginx/access.log;
+	error_log /data/logs/error.log;
+	access_log /data/logs/access.log;
 
 	ssl_ecdh_curve secp521r1;
 
@@ -107,8 +107,6 @@ server {
         ssl_certificate_key /etc/nginx/ssl/{{ $host }}/ssl.key;
 
         resolver 8.8.8.8 8.8.4.4;
-        #ssl_stapling on;
-        #ssl_stapling_verify on;
         resolver_timeout 5s;
         {{ end }}
 
@@ -179,8 +177,6 @@ server {
     ssl_certificate_key /etc/nginx/ssl/{{ $host }}/ssl.key;
 
     resolver 8.8.8.8 8.8.4.4;
-#    ssl_stapling on;
-#    ssl_stapling_verify on;
     resolver_timeout 5s;
     {{ end }}
 

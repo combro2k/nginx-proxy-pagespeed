@@ -20,8 +20,32 @@ if [[ ! -d "/data/ssl" ]]; then
 	mkdir -p /data/ssl
 fi
 
+if [[ -e "/data/ssl/server.key" ]]; then
+    openssl genrsa  -out server.key 4096
+fi
+
+if [[ -e "/data/ssl/server.csr" ]]; then
+    RUN openssl req -new -batch -key server.key -out server.csr
+fi
+
+if [[ -e "/data/ssl/server.crt" ]]; then
+    openssl x509 -req -days 10000 -in server.csr -signkey server.key -out server.crt
+fi
+
+if [[ -e "/data/ssl/dhparam.pem" ]]; then
+    openssl dhparam -out dhparam.pem 4096
+fi
+
+if [[ ! -d "/data/logs" ]]; then
+	mkdir -p /data/logs
+fi
+
 if [[ ! -e "/data/config/pagespeed-extra.conf" ]]; then
         touch /data/config/pagespeed-extra.conf
+fi
+
+if [[ ! -e "/data/config/proxy.conf" ]]; then
+        touch /data/config/proxy.conf
 fi
 
 /usr/local/bin/forego start -r
