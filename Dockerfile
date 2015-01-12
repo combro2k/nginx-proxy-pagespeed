@@ -6,7 +6,7 @@ RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev
 RUN apt-get dist-upgrade -y
 
 ENV NGINX_VERSION 1.7.9
-ENV OPENSSL_VERSION openssl-1.0.1j
+ENV OPENSSL_VERSION openssl-1.0.1k
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.2
 
