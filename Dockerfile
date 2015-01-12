@@ -10,7 +10,7 @@ ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.2
 
 RUN mkdir -p ${MODULESDIR}
-RUN mkdir -p /data/{config,ssl}
+RUN mkdir -p /data/{config,ssl,logs}
 
 RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
 RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
@@ -37,8 +37,8 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
-	--error-log-path=/var/log/nginx/error.log \
-	--http-log-path=/var/log/nginx/access.log \
+	--error-log-path=/data/logs/error.log \
+	--http-log-path=/data/logs/access.log \
 	--pid-path=/var/run/nginx.pid \
 	--lock-path=/var/run/nginx.lock \
 	--with-http_realip_module \

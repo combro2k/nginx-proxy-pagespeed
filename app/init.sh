@@ -20,8 +20,16 @@ if [[ ! -d "/data/ssl" ]]; then
 	mkdir -p /data/ssl
 fi
 
+if [[ ! -d "/data/logs" ]]; then
+	mkdir -p /data/logs
+fi
+
 if [[ ! -e "/data/config/pagespeed-extra.conf" ]]; then
         touch /data/config/pagespeed-extra.conf
+fi
+
+if [[ ! -e "/data/config/proxy.conf" ]]; then
+        touch /data/config/proxy.conf
 fi
 
 /usr/local/bin/forego start -r
