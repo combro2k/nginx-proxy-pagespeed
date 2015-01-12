@@ -20,19 +20,19 @@ if [[ ! -d "/data/ssl" ]]; then
 	mkdir -p /data/ssl
 fi
 
-if [[ -e "/data/ssl/server.key" ]]; then
+if [[ ! -e "/data/ssl/server.key" ]]; then
     openssl genrsa  -out server.key 4096
 fi
 
-if [[ -e "/data/ssl/server.csr" ]]; then
+if [[ ! -e "/data/ssl/server.csr" ]]; then
     RUN openssl req -new -batch -key server.key -out server.csr
 fi
 
-if [[ -e "/data/ssl/server.crt" ]]; then
+if [[ ! -e "/data/ssl/server.crt" ]]; then
     openssl x509 -req -days 10000 -in server.csr -signkey server.key -out server.crt
 fi
 
-if [[ -e "/data/ssl/dhparam.pem" ]]; then
+if [[ ! -e "/data/ssl/dhparam.pem" ]]; then
     openssl dhparam -out dhparam.pem 4096
 fi
 
