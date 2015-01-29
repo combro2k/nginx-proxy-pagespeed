@@ -8,7 +8,7 @@ RUN apt-get dist-upgrade -y
 ENV NGINX_VERSION 1.7.9
 ENV LIBRESSL_VERSION libressl-2.1.3
 ENV MODULESDIR /usr/src/nginx-modules
-ENV NPS_VERSION 1.9.32.2
+ENV NPS_VERSION 1.9.32.3
 
 RUN mkdir -p ${MODULESDIR}
 RUN mkdir -p /data/{config,ssl,logs}
