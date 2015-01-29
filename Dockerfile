@@ -26,11 +26,6 @@ RUN cd ${MODULESDIR} && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz
 
-ADD libressl-config /usr/src/${LIBRESSL_VERSION}/config
-ADD after.sh /usr/src/${LIBRESSL_VERSION}/after.sh
-RUN chmod +x /usr/src/${LIBRESSL_VERSION}/config /usr/src/${LIBRESSL_VERSION}/after.sh
-
-
 # Compile nginx
 RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
@@ -63,10 +58,10 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
  	--with-md5='../${LIBRESSL_VERSION}' \
 	--with-openssl='../${LIBRESSL_VERSION}' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
-    	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
-    	--add-module=${MODULESDIR}/headers-more-nginx-module
+    --add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
+    --add-module=${MODULESDIR}/headers-more-nginx-module
 
-RUN cd /usr/src/${LIBRESSL_VERSION}/ && ./config && make && make install && ./after.sh && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+RUN cd /usr/src/${LIBRESSL_VERSION}/ && ./configure && make && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 RUN ln -s /data/ssl /etc/nginx/ssl
 
