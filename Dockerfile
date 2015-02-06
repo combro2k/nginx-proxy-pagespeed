@@ -30,7 +30,7 @@ RUN mkdir -p ${MODULESDIR} && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
     unzip release-${NPS_VERSION}-beta.zip && \
     cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
-    curl -k -L https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz | tar -xzv
+    curl -k -L https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz | tar zxv
 
 # Compile nginx
 RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
