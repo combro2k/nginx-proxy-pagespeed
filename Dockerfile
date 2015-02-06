@@ -15,8 +15,6 @@ ENV DEBIAN_FRONTEND noninteractive
 
 EXPOSE 80 443
 
-RUN cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
-
 RUN apt-get update && apt-get install -y curl build-essential zlib1g-dev libpcre3 libpcre3-dev unzip && \
     apt-get dist-upgrade -y && \
     apt-get clean && \
@@ -27,6 +25,7 @@ RUN mkdir -p ${MODULESDIR} && \
     cd /usr/src/ && curl http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar zxv nginx-${NGINX_VERSION}.tar.gz && \
     cd /usr/src/ && curl http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${LIBRESSL_VERSION}.tar.gz | tar zxv && \
     cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git && \
+    git clone https://github.com/openresty/headers-more-nginx-module.git && \
     git clone https://github.com/openresty/headers-more-nginx-module.git && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
     unzip release-${NPS_VERSION}-beta.zip && \
@@ -62,12 +61,12 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
 	--with-sha1='../${LIBRESSL_VERSION}' \
- 	--with-md5='../${LIBRESSL_VERSION}' \
+	 --with-md5='../${LIBRESSL_VERSION}' \
 	--with-openssl='../${LIBRESSL_VERSION}' \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
-    --add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
-    --add-module=${MODULESDIR}/headers-more-nginx-module && \
-    cd /usr/src/${LIBRESSL_VERSION}/ && ./configure && make && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
+	--add-module=${MODULESDIR}/headers-more-nginx-module && \
+     cd /usr/src/${LIBRESSL_VERSION}/ && ./configure && make && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 #Add custom nginx.conf file
 ADD nginx.conf /etc/nginx/nginx.conf
@@ -78,10 +77,9 @@ RUN mkdir /app
 WORKDIR /app
 ADD ./app /app
 
-RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego
-RUN chmod u+x /usr/local/bin/forego
-RUN chmod u+x /app/init.sh
-
-ADD curl -L -k https://github.com/jwilder/docker-gen/releases/download/0.3.6/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv
+RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego && \
+    chmod u+x /usr/local/bin/forego && \
+    chmod u+x /app/init.sh && \
+    curl -L -k https://github.com/jwilder/docker-gen/releases/download/0.3.6/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv
 
 CMD ["/app/init.sh"]
