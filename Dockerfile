@@ -77,6 +77,6 @@ RUN chmod u+x /app/init.sh
 
 RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego && \
     chmod u+x /usr/local/bin/forego && \
-    curl -L -k https://github.com/jwilder/docker-gen/releases/download/0.3.6/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv
+    curl -L -k https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN}/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv
 
 CMD ["/app/init.sh"]
