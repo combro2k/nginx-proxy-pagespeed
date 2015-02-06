@@ -1,14 +1,17 @@
-FROM ubuntu:14.04
-MAINTAINER Jason Wilder jwilder@litl.com
-
-# Install Nginx.
-RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget -y 
-RUN apt-get dist-upgrade -y
+FROM ubuntu-debootstrap:14.04
+MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
 ENV NGINX_VERSION 1.7.9
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.3
 ENV DOCKER_GEN 0.3.6
+ENV DEBIAN_FRONTEND noninteractive
+
+# Install Nginx.
+RUN apt-get update && apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget curl tar -y && \
+    apt-get dist-upgrade -y && \
+    apt-get clean && \
+    rm -fr /var/lib/apt
 
 RUN mkdir -p ${MODULESDIR}
 RUN mkdir -p /data/{config,ssl,logs}
