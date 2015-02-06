@@ -1,11 +1,14 @@
 FROM ubuntu-debootstrap:14.04
 MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
+ENV DOCKER_HOST unix:///tmp/docker.sock
 ENV NGINX_VERSION 1.7.9
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.3
 ENV DOCKER_GEN 0.3.6
 ENV DEBIAN_FRONTEND noninteractive
+
+EXPOSE 80 443
 
 # Install Nginx.
 RUN apt-get update && apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget curl tar -y && \
@@ -13,31 +16,28 @@ RUN apt-get update && apt-get install nano git build-essential cmake zlib1g-dev 
     apt-get clean && \
     rm -fr /var/lib/apt
 
-RUN mkdir -p ${MODULESDIR}
-RUN mkdir -p /data/{config,ssl,logs}
-
-RUN cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz
-RUN cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl
-RUN cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git
-RUN cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
+RUN mkdir -p ${MODULESDIR} && \
+    mkdir -p /data/{config,ssl,logs} && \
+    cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz && \
+    cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl && \
+    cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git && \
+    cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
 ADD boringssl.patch /usr/src/boringssl.patch
 ADD nginx.patch /usr/src/nginx.patch
 
 # BoringSSL specifics
-RUN cd /usr/src/ && cd /usr/src/boringssl && patch < ../boringssl.patch
-RUN cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd ..
-RUN cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd ..
-RUN cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
-
-RUN cd ${MODULESDIR} && \
+RUN cd /usr/src/ && cd /usr/src/boringssl && patch < ../boringssl.patch && \
+    cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd .. && \
+    cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd .. && \
+    cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && \
+    cd ${MODULESDIR} && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
     unzip release-${NPS_VERSION}-beta.zip && \
     cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
-    tar -xzvf ${NPS_VERSION}.tar.gz
-
-RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
+    tar -xzvf ${NPS_VERSION}.tar.gz && \
+    cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
@@ -64,9 +64,8 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
 	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
-	--add-module=${MODULESDIR}/headers-more-nginx-module
-
-RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+	--add-module=${MODULESDIR}/headers-more-nginx-module && \
+    cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 #Add custom nginx.conf file
 ADD nginx.conf /etc/nginx/nginx.conf
@@ -77,13 +76,9 @@ RUN mkdir /app
 WORKDIR /app
 ADD ./app /app
 
-RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego
-RUN chmod u+x /usr/local/bin/forego
-RUN chmod u+x /app/init.sh
-
-RUN curl -L -k https://github.com/jwilder/docker-gen/releases/download/0.3.6/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv
-
-EXPOSE 80 443
-ENV DOCKER_HOST unix:///tmp/docker.sock
+RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego && \
+    chmod u+x /usr/local/bin/forego && \
+    chmod u+x /app/init.sh && \
+    curl -L -k https://github.com/jwilder/docker-gen/releases/download/0.3.6/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv
 
 CMD ["/app/init.sh"]
