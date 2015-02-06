@@ -65,14 +65,10 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 
 RUN cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
-RUN ln -s /data/ssl /etc/nginx/ssl
-
 #Add custom nginx.conf file
 ADD nginx.conf /etc/nginx/nginx.conf
 ADD pagespeed.conf /etc/nginx/pagespeed.conf
 ADD proxy_params /etc/nginx/proxy_params
-
-WORKDIR /etc/nginx/ssl
 
 RUN mkdir /app
 WORKDIR /app
@@ -82,7 +78,7 @@ RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/
 RUN chmod u+x /usr/local/bin/forego
 RUN chmod u+x /app/init.sh
 
-RUN curl -L -k https://github.com/jwilder/docker-gen/releases/download/0.3.6/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv docker-gen
+RUN curl -L -k https://github.com/jwilder/docker-gen/releases/download/0.3.6/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv
 
 EXPOSE 80 443
 ENV DOCKER_HOST unix:///tmp/docker.sock

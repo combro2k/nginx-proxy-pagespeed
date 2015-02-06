@@ -41,11 +41,13 @@ if [[ ! -d "/data/logs" ]]; then
 fi
 
 if [[ ! -e "/data/config/pagespeed-extra.conf" ]]; then
-        touch /data/config/pagespeed-extra.conf
+    touch /data/config/pagespeed-extra.conf
 fi
 
 if [[ ! -e "/data/config/proxy.conf" ]]; then
-        touch /data/config/proxy.conf
+    touch /data/config/proxy.conf
+else
+    echo -n | tee /data/config/proxy.conf
 fi
 
 /usr/local/bin/forego start -r
