@@ -8,6 +8,7 @@ RUN apt-get dist-upgrade -y
 ENV NGINX_VERSION 1.7.9
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.3
+ENV DOCKER_GEN 0.3.6
 
 RUN mkdir -p ${MODULESDIR}
 RUN mkdir -p /data/{config,ssl,logs}
@@ -81,7 +82,7 @@ RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/
 RUN chmod u+x /usr/local/bin/forego
 RUN chmod u+x /app/init.sh
 
-ADD app/docker-gen docker-gen
+RUN curl -L -k https://github.com/jwilder/docker-gen/releases/download/0.3.6/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv docker-gen
 
 EXPOSE 80 443
 ENV DOCKER_HOST unix:///tmp/docker.sock
