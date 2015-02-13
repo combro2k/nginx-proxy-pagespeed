@@ -2,7 +2,7 @@ FROM ubuntu-debootstrap:14.04
 MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
-ENV NGINX_VERSION 1.7.9
+ENV NGINX_VERSION 1.7.10
 ENV OPENSSL_VERSION openssl-1.0.2
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.3
