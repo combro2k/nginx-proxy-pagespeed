@@ -5,15 +5,13 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 ===================================================================
 --- src/event/ngx_event_openssl.c	(revision )
 +++ src/event/ngx_event_openssl.c	(revision )
-@@ -1086,9 +1086,11 @@
-         c->send_chain = ngx_ssl_send_chain;
-
-         /* initial handshake done, disable renegotiation (CVE-2009-3555) */
-+        #ifdef SSL3_FLAGS_NO_RENEGOTIATE_CIPHERS
-         if (c->ssl->connection->s3) {
-             c->ssl->connection->s3->flags |= SSL3_FLAGS_NO_RENEGOTIATE_CIPHERS;
-         }
-+        #endif
-
-         return NGX_OK;
-     }
+@@ -1893,7 +1893,9 @@
+ 
+             /* handshake failures */
+         if (n == SSL_R_BAD_CHANGE_CIPHER_SPEC                        /*  103 */
++#ifdef SSL_R_BLOCK_CIPHER_PAD_IS_WRONG
+             || n == SSL_R_BLOCK_CIPHER_PAD_IS_WRONG                  /*  129 */
++#endif
+             || n == SSL_R_DIGEST_CHECK_FAILED                        /*  149 */
+             || n == SSL_R_ERROR_IN_RECEIVED_CIPHER_LIST              /*  151 */
+             || n == SSL_R_EXCESSIVE_MESSAGE_SIZE                     /*  152 */

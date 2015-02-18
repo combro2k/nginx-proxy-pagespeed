@@ -37,7 +37,7 @@ RUN cd /usr/src/ && cd /usr/src/boringssl && patch < ../boringssl.patch && \
     cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz && \
-    cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
+    cd /usr/src/nginx-${NGINX_VERSION} && patch < ../nginx.patch && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
