@@ -79,6 +79,10 @@ server {
             {{ end }}
         {{ end }}
 
+        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+        include {{ $host }}.conf;
+        {{ end }}
+
         {{ range $index, $value := $containers }}
             {{ if $value.Env.PAGESPEED }}
         include pagespeed.conf;
@@ -108,6 +112,10 @@ server {
         resolver_timeout 5s;
         {{ end }}
 
+        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+        include {{ $host }}.conf;
+        {{ end }}
+
         ssl_session_cache  builtin:1000  shared:SSL:10m;
 
         ssl                        on;
@@ -130,8 +138,7 @@ server {
         include pagespeed.conf;
         pagespeed Domain {{ $host }};
         pagespeed MapOriginDomain "http://{{ $host }}" "https://{{ $host }}";
-
-                {{ end }}
+            {{ end }}
         {{ end }}
 
         location / {
@@ -177,6 +184,10 @@ server {
     ssl_stapling on;
     ssl_stapling_verify on;
     resolver_timeout 5s;
+    {{ end }}
+
+    {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+    include {{ $host }}.conf;
     {{ end }}
 
     ssl_session_cache  builtin:1000  shared:SSL:10m;
