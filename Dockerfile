@@ -27,7 +27,7 @@ ADD boringssl.patch /usr/src/boringssl.patch
 ADD nginx.patch /usr/src/nginx.patch
 
 # BoringSSL specifics
-RUN cd /usr/src/ && cd /usr/src/boringssl && patch -p1 < ../boringssl.patch && \
+RUN cd /usr/src/ && cd /usr/src/boringssl && patch -p0 < ../boringssl.patch && \
     cd /usr/src/boringssl && mkdir build && cd build && cmake ../ && make && cd .. && \
     cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd .. && \
     cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && \
