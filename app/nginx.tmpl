@@ -85,7 +85,11 @@ server {
             {{ if $value.Env.PAGESPEED }}
         include pagespeed.conf;
         pagespeed Domain {{ $host }};
-                {{ end }}
+            {{ end }}
+        {{ end }}
+
+        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+            include {{ $host }}.conf;
         {{ end }}
 
         location / {
@@ -107,6 +111,10 @@ server {
 
         resolver 8.8.8.8 8.8.4.4;
         resolver_timeout 5s;
+        {{ end }}
+
+        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+                include {{ $host }}.conf;
         {{ end }}
 
         ssl_session_cache  builtin:1000  shared:SSL:10m;
@@ -131,7 +139,7 @@ server {
         include pagespeed.conf;
         pagespeed Domain {{ $host }};
         pagespeed MapOriginDomain "http://{{ $host }}" "https://{{ $host }}";
-                {{ end }}
+            {{ end }}
         {{ end }}
 
         location / {
@@ -176,6 +184,10 @@ server {
 
     resolver 8.8.8.8 8.8.4.4;
     resolver_timeout 5s;
+    {{ end }}
+
+    {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+        include {{ $host }}.conf;
     {{ end }}
 
     ssl_session_cache  builtin:1000  shared:SSL:10m;
