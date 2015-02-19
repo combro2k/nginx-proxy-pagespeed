@@ -81,6 +81,10 @@ server {
             {{ end }}
         {{ end }}
 
+        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+        include {{ $host }}.conf;
+        {{ end }}
+
         {{ range $index, $value := $containers }}
             {{ if $value.Env.PAGESPEED }}
         include pagespeed.conf;
@@ -107,6 +111,10 @@ server {
 
         resolver 8.8.8.8 8.8.4.4;
         resolver_timeout 5s;
+        {{ end }}
+
+        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+        include {{ $host }}.conf;
         {{ end }}
 
         ssl_session_cache  builtin:1000  shared:SSL:10m;
@@ -176,6 +184,10 @@ server {
 
     resolver 8.8.8.8 8.8.4.4;
     resolver_timeout 5s;
+    {{ end }}
+
+    {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+    include {{ $host }}.conf;
     {{ end }}
 
     ssl_session_cache  builtin:1000  shared:SSL:10m;
