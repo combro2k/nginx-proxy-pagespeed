@@ -81,15 +81,15 @@ server {
             {{ end }}
         {{ end }}
 
+        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
+        include {{ $host }}.conf;
+        {{ end }}
+
         {{ range $index, $value := $containers }}
             {{ if $value.Env.PAGESPEED }}
         include pagespeed.conf;
         pagespeed Domain {{ $host }};
             {{ end }}
-        {{ end }}
-
-        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
-            include {{ $host }}.conf;
         {{ end }}
 
         location / {
@@ -114,7 +114,7 @@ server {
         {{ end }}
 
         {{ if (exists (printf "/data/config/%s.conf" $host)) }}
-                include {{ $host }}.conf;
+        include {{ $host }}.conf;
         {{ end }}
 
         ssl_session_cache  builtin:1000  shared:SSL:10m;
@@ -187,7 +187,7 @@ server {
     {{ end }}
 
     {{ if (exists (printf "/data/config/%s.conf" $host)) }}
-        include {{ $host }}.conf;
+    include {{ $host }}.conf;
     {{ end }}
 
     ssl_session_cache  builtin:1000  shared:SSL:10m;
