@@ -24,7 +24,7 @@ if [[ ! -e "/data/ssl/server.key" ]]; then
     openssl genrsa  -out server.key 4096
 fi
 
-if [[!  -e "/data/ssl/server.csr" ]]; then
+if [[ ! -e "/data/ssl/server.csr" ]]; then
     RUN openssl req -new -batch -key server.key -out server.csr
 fi
 
