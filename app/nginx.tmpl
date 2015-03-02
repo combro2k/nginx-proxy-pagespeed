@@ -79,8 +79,8 @@ server {
             {{ end }}
         {{ end }}
 
-        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
-        include {{ $host }}.conf;
+        {{ if (exists (printf "/data/config/%s-extra.conf" $host)) }}
+        include /data/config/{{ $host }}-extra.conf;
         {{ end }}
 
         {{ range $index, $value := $containers }}
@@ -112,8 +112,8 @@ server {
         resolver_timeout 5s;
         {{ end }}
 
-        {{ if (exists (printf "/data/config/%s.conf" $host)) }}
-        include {{ $host }}.conf;
+        {{ if (exists (printf "/data/config/%s-extra.conf" $host)) }}
+        include /data/config/{{ $host }}-extra.conf;
         {{ end }}
 
         ssl_session_cache  builtin:1000  shared:SSL:10m;
@@ -186,8 +186,8 @@ server {
     resolver_timeout 5s;
     {{ end }}
 
-    {{ if (exists (printf "/data/config/%s.conf" $host)) }}
-    include {{ $host }}.conf;
+    {{ if (exists (printf "/data/config/%s-extra.conf" $host)) }}
+    include /data/config/{{ $host }}-extra.conf;
     {{ end }}
 
     ssl_session_cache  builtin:1000  shared:SSL:10m;
