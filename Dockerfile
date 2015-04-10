@@ -65,7 +65,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
 	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
 	--add-module=${MODULESDIR}/headers-more-nginx-module && \
-     cd /usr/src/${LIBRESSL_VERSION}/ && ./configure && make && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+     cd /usr/src/libressl-${LIBRESSL_VERSION}/ && ./configure && make && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
 
 #Add custom nginx.conf file
 ADD nginx.conf /etc/nginx/nginx.conf
