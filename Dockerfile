@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y curl build-essential zlib1g-dev libpcre
 
 RUN mkdir -p ${MODULESDIR} && \
     mkdir -p /data/{config,ssl,logs} && \
-    cd /usr/src/ && curl http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar zxv nginx-${NGINX_VERSION}.tar.gz && \
+    cd /usr/src/ && curl http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar zxv && \
     cd /usr/src/ && curl http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz | tar zxv && \
     cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git && \
     git clone https://github.com/openresty/headers-more-nginx-module.git && \
