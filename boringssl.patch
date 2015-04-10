@@ -1,9 +1,12 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c0bdc73..303c101 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -3,8 +3,8 @@ cmake_minimum_required (VERSION 2.8.10)
- project (BoringSSL)
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CMakeLists.txt	(revision 0fd563970109166b9c842cf31bd4747ea4ecca01)
++++ CMakeLists.txt	(revision )
+@@ -10,8 +10,8 @@
+ endif()
  
  if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 -  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -ggdb -fvisibility=hidden")
@@ -13,25 +16,3 @@ index c0bdc73..303c101 100644
  elseif(MSVC)
    set(MSVC_DISABLED_WARNINGS_LIST
        "C4100" # 'exarg' : unreferenced formal parameter
-@@ -107,5 +107,4 @@ endif()
- 
- add_subdirectory(crypto)
- add_subdirectory(ssl)
--add_subdirectory(ssl/test)
--add_subdirectory(tool)
-+
-diff --git a/crypto/err/err.c b/crypto/err/err.c
-index 144f1c3..596fdeb 100644
---- a/crypto/err/err.c
-+++ b/crypto/err/err.c
-@@ -425,8 +425,8 @@ void ERR_error_string_n(uint32_t packed_error, char *buf, size_t len) {
- 
- #include "err_data.h"
- 
--// err_string_cmp is a compare function for searching error values with
--// |bsearch| in |err_string_lookup|.
-+/* err_string_cmp is a compare function for searching error values with
-+ * |bsearch| in |err_string_lookup|. */
- static int err_string_cmp(const void *a, const void *b) {
-   const uint32_t a_key = *((const uint32_t*) a) >> 15;
-   const uint32_t b_key = *((const uint32_t*) b) >> 15;
