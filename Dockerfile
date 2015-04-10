@@ -28,7 +28,7 @@ ADD nginx.patch /usr/src/nginx.patch
 
 # BoringSSL specifics
 RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar zxv && \
-    cd /usr/src/ && cd /usr/src/boringssl && patch -p1 < ../boringssl.patch && \
+    cd /usr/src/ && cd /usr/src/boringssl && patch -p0 < ../boringssl.patch && \
     cd /usr/src/boringssl && mkdir build && cd build && PATH=${PATH}:/usr/local/go/bin cmake ../ && make && cd .. && \
     cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd .. && \
     cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && \
