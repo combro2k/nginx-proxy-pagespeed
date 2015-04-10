@@ -16,3 +16,21 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  elseif(MSVC)
    set(MSVC_DISABLED_WARNINGS_LIST
        "C4100" # 'exarg' : unreferenced formal parameter
+Index: crypto/err/err.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- crypto/err/err.c	(revision 0fd563970109166b9c842cf31bd4747ea4ecca01)
++++ crypto/err/err.c	(revision )
+@@ -425,8 +425,8 @@
+   }
+ }
+ 
+-// err_string_cmp is a compare function for searching error values with
+-// |bsearch| in |err_string_lookup|.
++/* err_string_cmp is a compare function for searching error values with
++ * |bsearch| in |err_string_lookup|. */
+ static int err_string_cmp(const void *a, const void *b) {
+   const uint32_t a_key = *((const uint32_t*) a) >> 15;
+   const uint32_t b_key = *((const uint32_t*) b) >> 15;
