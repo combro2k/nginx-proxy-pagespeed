@@ -59,9 +59,9 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
 	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
-	--with-sha1='../${LIBRESSL_VERSION}' \
-	 --with-md5='../${LIBRESSL_VERSION}' \
-	--with-openssl='../${LIBRESSL_VERSION}' \
+	--with-sha1="../libressl-${LIBRESSL_VERSION}" \
+	--with-md5="../libressl-${LIBRESSL_VERSION}" \
+	--with-openssl="../libressl-${LIBRESSL_VERSION}" \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
 	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
 	--add-module=${MODULESDIR}/headers-more-nginx-module && \
