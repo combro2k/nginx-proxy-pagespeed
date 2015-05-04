@@ -11,7 +11,7 @@ ENV DEBIAN_FRONTEND noninteractive
 EXPOSE 80 443
 
 # Install Nginx.
-RUN apt-get update && apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget curl tar -y && \
+RUN apt-get update && apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget curl tar libpthread-stubs0-dev:amd64 -y && \
     apt-get dist-upgrade -y && \
     apt-get clean && \
     rm -fr /var/lib/apt
@@ -37,7 +37,7 @@ RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-am
     cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar -xzvf ${NPS_VERSION}.tar.gz && \
-    cd /usr/src/nginx-${NGINX_VERSION} && patch -p0 < ../nginx.patch && ./configure \
+    cd /usr/src/nginx-${NGINX_VERSION} && patch -p1 < ../nginx.patch && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \

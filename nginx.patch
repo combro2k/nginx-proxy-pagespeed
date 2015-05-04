@@ -1,11 +1,19 @@
-Index: src/event/ngx_event_openssl.c
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
---- src/event/ngx_event_openssl.c	(revision )
-+++ src/event/ngx_event_openssl.c	(revision )
-@@ -1893,7 +1893,9 @@
+diff -rupN nginx-1.9.0/src/core/nginx.c diff/src/core/nginx.c
+--- nginx-1.9.0/src/core/nginx.c	2015-04-28 17:31:18.000000000 +0200
++++ diff/src/core/nginx.c	2015-05-04 18:07:39.526391241 +0200
+@@ -229,7 +229,7 @@ main(int argc, char *const *argv)
+ #endif
+ 
+ #if (NGX_SSL)
+-            if (SSLeay() == SSLEAY_VERSION_NUMBER) {
++            if (NGX_SSL) {
+                 ngx_write_stderr("built with " OPENSSL_VERSION_TEXT
+                                  NGX_LINEFEED);
+             } else {
+diff -rupN nginx-1.9.0/src/event/ngx_event_openssl.c diff/src/event/ngx_event_openssl.c
+--- nginx-1.9.0/src/event/ngx_event_openssl.c	2015-04-28 17:31:19.000000000 +0200
++++ diff/src/event/ngx_event_openssl.c	2015-05-04 18:08:04.612825561 +0200
+@@ -1905,7 +1905,9 @@ ngx_ssl_connection_error(ngx_connection_
  
              /* handshake failures */
          if (n == SSL_R_BAD_CHANGE_CIPHER_SPEC                        /*  103 */
