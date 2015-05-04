@@ -23,13 +23,12 @@ RUN mkdir -p ${MODULESDIR} && \
     cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git && \
     cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
-ADD boringssl.patch /usr/src/boringssl.patch
 ADD nginx.patch /usr/src/nginx.patch
 
 # BoringSSL specifics
 RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar zxv && \
-    cd /usr/src/ && cd /usr/src/boringssl && patch -p0 < ../boringssl.patch && \
-    cd /usr/src/boringssl && mkdir build && cd build && PATH=${PATH}:/usr/local/go/bin cmake ../ && make && cd .. && \
+    cd /usr/src/ && cd /usr/src/boringssl && \
+    mkdir build && cd build && PATH=${PATH}:/usr/local/go/bin cmake ../ && make && cd .. && \
     cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && cd .. && \
     cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && \
     cd ${MODULESDIR} && \
