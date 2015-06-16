@@ -6,8 +6,8 @@ RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev
 RUN apt-get dist-upgrade -y
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
-ENV NGINX_VERSION 1.9.0
-ENV LIBRESSL_VERSION 2.1.6
+ENV NGINX_VERSION 1.9.1
+ENV LIBRESSL_VERSION 2.2.0
 ENV MODULESDIR /usr/src/nginx-modules
 ENV NPS_VERSION 1.9.32.3
 ENV DOCKER_GEN 0.3.9
