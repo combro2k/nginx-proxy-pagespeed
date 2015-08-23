@@ -15,7 +15,6 @@ ENV DEBIAN_FRONTEND noninteractive
 EXPOSE 80 443
 
 RUN apt-get update && apt-get install -y curl build-essential zlib1g-dev libpcre3 libpcre3-dev unzip && \
-    apt-get dist-upgrade -y && \
     apt-get clean && \
     rm -fr /var/lib/apt
 
