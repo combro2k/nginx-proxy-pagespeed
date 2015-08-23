@@ -1,4 +1,4 @@
-FROM combro2k/debian-debootstrap:14.04
+FROM combro2k/debian-debootstrap:8
 MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
