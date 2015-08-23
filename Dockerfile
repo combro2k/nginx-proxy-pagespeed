@@ -1,15 +1,14 @@
-FROM ubuntu-debootstrap:14.04
+FROM combro2k/debian-debootstrap:8
 MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
 # Install Nginx.
 RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget -y
-RUN apt-get dist-upgrade -y
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 ENV NGINX_VERSION 1.9.2
-ENV LIBRESSL_VERSION 2.2.0
+ENV LIBRESSL_VERSION 2.2.2
 ENV MODULESDIR /usr/src/nginx-modules
-ENV NPS_VERSION 1.9.32.3
+ENV NPS_VERSION 1.9.32.6
 ENV DOCKER_GEN 0.4.0
 ENV DEBIAN_FRONTEND noninteractive
 
