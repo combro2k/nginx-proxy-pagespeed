@@ -58,7 +58,6 @@ RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-am
 	--with-file-aio \
 	--with-ipv6 \
 	--with-http_ssl_module \
-	--with-http_spdy_module \
         --with-http_v2_module \
 	--with-cc-opt="-I ../boringssl/.openssl/include/ -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2" \
 	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
