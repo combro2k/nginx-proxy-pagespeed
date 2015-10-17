@@ -51,7 +51,6 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
         --with-mail \
         --with-mail_ssl_module \
         --with-file-aio \
-        --with-http_spdy_module \
         --with-http_v2_module \
         --with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
         --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
