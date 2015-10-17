@@ -2,11 +2,11 @@ FROM combro2k/debian-debootstrap:8
 MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
-ENV NGINX_VERSION 1.9.4
+ENV NGINX_VERSION 1.9.5
 ENV OPENSSL_VERSION openssl-1.0.2d
 ENV MODULESDIR /usr/src/nginx-modules
-ENV NPS_VERSION 1.9.32.6
-ENV DOCKER_GEN 0.4.0
+ENV NPS_VERSION 1.9.32.10
+ENV DOCKER_GEN 0.4.2
 ENV DEBIAN_FRONTEND noninteractive
 
 # Install Nginx.
@@ -52,6 +52,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
         --with-mail_ssl_module \
         --with-file-aio \
         --with-http_spdy_module \
+        --with-http_v2_module \
         --with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
         --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
         --with-ipv6 \
