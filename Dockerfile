@@ -5,11 +5,11 @@ MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 RUN apt-get update &&  apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget -y
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
-ENV NGINX_VERSION 1.9.2
-ENV LIBRESSL_VERSION 2.2.2
+ENV NGINX_VERSION 1.9.5
+ENV LIBRESSL_VERSION 2.3.0
 ENV MODULESDIR /usr/src/nginx-modules
-ENV NPS_VERSION 1.9.32.6
-ENV DOCKER_GEN 0.4.0
+ENV NPS_VERSION 1.9.32.1
+ENV DOCKER_GEN 0.4.2
 ENV DEBIAN_FRONTEND noninteractive
 
 EXPOSE 80 443
@@ -54,6 +54,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--with-mail_ssl_module \
 	--with-file-aio \
 	--with-http_spdy_module \
+        --with-http_v2_module \
 	--with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
 	--with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
 	--with-ipv6 \
