@@ -2,10 +2,10 @@ FROM combro2k/debian-debootstrap:8
 MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
-ENV NGINX_VERSION 1.9.4
+ENV NGINX_VERSION 1.9.5
 ENV MODULESDIR /usr/src/nginx-modules
-ENV NPS_VERSION 1.9.32.6
-ENV DOCKER_GEN 0.4.0
+ENV NPS_VERSION 1.9.32.10
+ENV DOCKER_GEN 0.4.2
 ENV DEBIAN_FRONTEND noninteractive
 
 EXPOSE 80 443
@@ -59,6 +59,7 @@ RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-am
 	--with-ipv6 \
 	--with-http_ssl_module \
 	--with-http_spdy_module \
+        --with-http_v2_module \
 	--with-cc-opt="-I ../boringssl/.openssl/include/ -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2" \
 	--with-ld-opt="-L ../boringssl/.openssl/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed" \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
