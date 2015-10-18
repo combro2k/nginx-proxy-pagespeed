@@ -22,6 +22,7 @@ RUN mkdir -p ${MODULESDIR} && \
     mkdir -p /data/{config,ssl,logs} && \
     cd /usr/src/ && curl http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar zxv && \
     cd /usr/src/ && curl http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz | tar zxv && \
+    cd /usr/src/libressl-${LIBRESSL_VERSION}/ && ./configure LDFLAGS=-lrt --prefix=/usr/src/libressl-${LIBRESSL_VERSION}/.openssl/ && make install-strip && \
     cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git && \
     git clone https://github.com/openresty/headers-more-nginx-module.git && \
     wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
@@ -32,6 +33,7 @@ RUN mkdir -p ${MODULESDIR} && \
 # Compile nginx
 RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
+        --with-ld-opt="-lrt" \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
 	--error-log-path=/data/logs/error.log \
@@ -63,7 +65,7 @@ RUN cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
 	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
 	--add-module=${MODULESDIR}/headers-more-nginx-module && \
-     cd /usr/src/libressl-${LIBRESSL_VERSION}/ && ./configure && make && cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+     touch /usr/src/libressl-${LIBRESSL_VERSION}/.openssl/include/openssl/ssl.h && make && make install
 
 #Add custom nginx.conf file
 ADD nginx.conf /etc/nginx/nginx.conf
