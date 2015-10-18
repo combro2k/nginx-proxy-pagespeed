@@ -1,5 +1,5 @@
 server {
-	listen [::]:80 default_server;
+	listen 80 default_server;
         listen [::]:80 ipv6only=on default_server;
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
 	error_log /data/logs/error.log;
@@ -17,7 +17,7 @@ ssl_ciphers "EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA384:EECDH+ECDSA
 ssl_prefer_server_ciphers   on;
 
 server {
-	listen [::]:443 ssl http2;
+	listen 443 ssl http2;
         listen [::]:443 ipv6only=on ssl http2;
 
 	server_name _; # This is just an invalid value which will never trigger on a real hostname.
