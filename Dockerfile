@@ -17,8 +17,11 @@ RUN apt-get update && apt-get install nano git build-essential cmake zlib1g-dev 
 
 RUN mkdir -p ${MODULESDIR} && \
     mkdir -p /data/{config,ssl,logs} && \
-    cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz && \
+    cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz && export CFLAGS="-Wno-error" && \
     cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl && \
+    cd /usr/src/boringssl && mkdir build && cd build && cmake .. && make && \
+    cd ../ && mkdir -p .openssl/lib && cd .openssl && ln -s ../include . && \
+    cd ../ && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && \
     cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git && \
     cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
@@ -28,7 +31,7 @@ RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-am
     cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
     tar zxf ${NPS_VERSION}.tar.gz && \
-    cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
+    cd /usr/src/nginx-${NGINX_VERSION} && touch ../boringssl/.openssl/include/openssl/ssl.h && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
