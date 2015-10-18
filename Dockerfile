@@ -23,18 +23,12 @@ RUN mkdir -p ${MODULESDIR} && \
     cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
 
 # BoringSSL specifics
-RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar zxv && \
-    cd /usr/src/ && cd /usr/src/boringssl && \
-    mkdir build && cd build && PATH=${PATH}:/usr/local/go/bin cmake ../ && make && \
-    cd /usr/src/boringssl && mkdir -p .openssl/lib && cd .openssl && ln -s ../include && \
-    cd /usr/src/boringssl && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && \
-    cd ${MODULESDIR} && \
-    wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && \
-    unzip release-${NPS_VERSION}-beta.zip && \
+RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar zx && \
+    cd ${MODULESDIR} && wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && unzip release-${NPS_VERSION}-beta.zip && \
     cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
     wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
-    tar -xzvf ${NPS_VERSION}.tar.gz && \
-    cd /usr/src/nginx-${NGINX_VERSION} && touch ../boringssl/.openssl/include/openssl/ssl.h && ./configure \
+    tar zxf ${NPS_VERSION}.tar.gz && \
+    cd /usr/src/nginx-${NGINX_VERSION} && ./configure \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
@@ -75,6 +69,6 @@ ADD ./app /app
 RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego && \
     chmod u+x /usr/local/bin/forego && \
     chmod u+x /app/init.sh && \
-    curl -L -k https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN}/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zxv
+    curl -L -k https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN}/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zx
 
 CMD ["/app/init.sh"]
