@@ -63,7 +63,7 @@ RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-am
 	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
 	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
 	--add-module=${MODULESDIR}/headers-more-nginx-module && \
-    cd /usr/src/nginx-${NGINX_VERSION} && make && make install
+    cd /usr/src/nginx-${NGINX_VERSION} && touch ../boringssl/.openssl/include/ssl.h && make && make install
 
 #Add custom nginx.conf file
 ADD nginx.conf /etc/nginx/nginx.conf
