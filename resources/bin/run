@@ -1,0 +1,41 @@
+#!/bin/bash
+if [[ ! -d "/data/config" ]]; then
+	mkdir -p /data/config
+fi
+
+if [[ ! -d "/data/ssl" ]]; then
+	mkdir -p /data/ssl
+fi
+
+if [[ ! -d "/data/logs" ]]; then
+	mkdir -p /data/logs
+fi
+
+if [[ ! -e "/data/ssl/server.key" ]]; then
+    openssl genrsa -out /data/ssl/server.key 4096
+fi
+
+if [[ ! -e "/data/ssl/server.csr" ]]; then
+    openssl req -new -batch -key /data/ssl/server.key -out /data/ssl/server.csr
+fi
+
+if [[ ! -e "/data/ssl/server.crt" ]]; then
+    openssl x509 -req -days 10000 -in /data/ssl/server.csr -signkey /data/ssl/server.key -out /data/ssl/server.crt
+fi
+
+if [[ ! -e "/data/ssl/dhparam.pem" ]]; then
+    openssl dhparam -out /data/ssl/dhparam.pem 2048
+fi
+
+if [[ ! -e "/data/config/pagespeed-extra.conf" ]]; then
+    touch /data/config/pagespeed-extra.conf
+fi
+
+if [[ ! -e "/data/config/proxy.conf" ]]; then
+    touch /data/config/proxy.conf
+else
+    rm /data/config/proxy.conf
+    touch /data/config/proxy.conf
+fi
+
+/usr/local/bin/forego start -f /app/Procfile -r
