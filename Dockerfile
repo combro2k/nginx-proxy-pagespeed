@@ -1,77 +1,26 @@
 FROM combro2k/debian-debootstrap:8
+
 MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
 
-ENV DOCKER_HOST unix:///tmp/docker.sock
-ENV NGINX_VERSION 1.9.5
-ENV MODULESDIR /usr/src/nginx-modules
-ENV NPS_VERSION 1.9.32.10
-ENV DOCKER_GEN 0.4.2
-ENV DEBIAN_FRONTEND noninteractive
+# Environment variables
+ENV DOCKER_HOST=unix:///tmp/docker.sock \
+    HOME=/root \
+    INSTALL_LOG=/var/log/build.log
+
+# Add first the scripts to the container
+ADD resources/patches/ /usr/src/patches/
+ADD resources/bin/ /usr/local/bin/
+
+# Run the installer script
+RUN /bin/bash -l -c 'bash /usr/local/bin/setup.sh build'
+
+# Add remaining resources
+ADD resources/etc/ /etc/
+ADD resources/app/ /app/
+
+# Run the last bits and clean up
+RUN /bin/bash -l -c 'bash /usr/local/bin/setup.sh post_install' | tee -a ${INSTALL_LOG} > /dev/null 2>&1 || exit 1
 
 EXPOSE 80 443
 
-# Install Nginx.
-RUN apt-get update && apt-get install nano git build-essential cmake zlib1g-dev libpcre3 libpcre3-dev unzip wget curl tar libpthread-stubs0-dev:amd64 -y && \
-    apt-get clean && \
-    rm -fr /var/lib/apt
-
-RUN mkdir -p ${MODULESDIR} && \
-    mkdir -p /data/{config,ssl,logs} && \
-    cd /usr/src/ && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar xf nginx-${NGINX_VERSION}.tar.gz && rm -f nginx-${NGINX_VERSION}.tar.gz && export CFLAGS="-Wno-error" && \
-    cd /usr/src/ && git clone https://boringssl.googlesource.com/boringssl && \
-    cd /usr/src/boringssl && mkdir build && cd build && cmake .. && make && \
-    cd ../ && mkdir -p .openssl/lib && cd .openssl && ln -s ../include . && \
-    cd ../ && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && \
-    cd ${MODULESDIR} && git clone git://github.com/bpaquet/ngx_http_enhanced_memcached_module.git && \
-    cd ${MODULESDIR} && git clone https://github.com/openresty/headers-more-nginx-module.git
-
-# BoringSSL specifics
-RUN cd /usr/local && curl https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar zx && \
-    cd ${MODULESDIR} && wget --no-check-certificate https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.zip && unzip release-${NPS_VERSION}-beta.zip && \
-    cd ngx_pagespeed-release-${NPS_VERSION}-beta/ && \
-    wget --no-check-certificate https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz && \
-    tar zxf ${NPS_VERSION}.tar.gz && \
-    cd /usr/src/nginx-${NGINX_VERSION} && touch ../boringssl/.openssl/include/openssl/ssl.h && ./configure \
-	--prefix=/etc/nginx \
-	--sbin-path=/usr/sbin/nginx \
-	--conf-path=/etc/nginx/nginx.conf \
-	--error-log-path=/data/logs/error.log \
-	--http-log-path=/data/logs/access.log \
-	--pid-path=/var/run/nginx.pid \
-	--lock-path=/var/run/nginx.lock \
-	--with-http_realip_module \
-	--with-http_addition_module \
-	--with-http_sub_module \
-	--with-http_dav_module \
-	--with-http_flv_module \
-	--with-http_mp4_module \
-	--with-http_gunzip_module \
-	--with-http_gzip_static_module \
-	--with-http_random_index_module \
-	--with-http_secure_link_module \
-	--with-http_stub_status_module \
-	--with-file-aio \
-	--with-ipv6 \
-	--with-http_ssl_module \
-        --with-http_v2_module \
-        --with-openssl=../boringssl \
-	--add-module=${MODULESDIR}/ngx_pagespeed-release-${NPS_VERSION}-beta \
-	--add-module=${MODULESDIR}/ngx_http_enhanced_memcached_module \
-	--add-module=${MODULESDIR}/headers-more-nginx-module && \
-    cd /usr/src/nginx-${NGINX_VERSION} && make && make install
-
-#Add custom nginx.conf file
-ADD nginx.conf /etc/nginx/nginx.conf
-ADD pagespeed.conf /etc/nginx/pagespeed.conf
-ADD proxy_params /etc/nginx/proxy_params
-
-RUN mkdir /app
-WORKDIR /app
-ADD ./app /app
-
-RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego && \
-    chmod u+x /usr/local/bin/forego && \
-    chmod u+x /app/init.sh && \
-    curl -L -k https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN}/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zx
-
-CMD ["/app/init.sh"]
+CMD ["/usr/local/bin/run"]
