@@ -1,17 +1,4 @@
 #!/bin/bash
-
-if [ ! -z "${IPV6ADDR}" ]; then
-	echo  ${IPV6ADDR}
-	ip -6 addr add "${IPV6ADDR}" dev eth0
-fi
-
-sleep 2
-
-if [ ! -z "${IPV6GW}" ]; then
-	echo ${IPV6GW}
-	ip -6 route add  default via "${IPV6GW}" dev eth0
-fi
-
 if [[ ! -d "/data/config" ]]; then
 	mkdir -p /data/config
 fi
@@ -20,24 +7,24 @@ if [[ ! -d "/data/ssl" ]]; then
 	mkdir -p /data/ssl
 fi
 
+if [[ ! -d "/data/logs" ]]; then
+	mkdir -p /data/logs
+fi
+
 if [[ ! -e "/data/ssl/server.key" ]]; then
-    openssl genrsa  -out server.key 4096
+    openssl genrsa -out /data/ssl/server.key 4096
 fi
 
 if [[ ! -e "/data/ssl/server.csr" ]]; then
-    openssl req -new -batch -key server.key -out server.csr
+    openssl req -new -batch -key /data/ssl/server.key -out /data/ssl/server.csr
 fi
 
 if [[ ! -e "/data/ssl/server.crt" ]]; then
-    openssl x509 -req -days 10000 -in server.csr -signkey server.key -out server.crt
+    openssl x509 -req -days 10000 -in /data/ssl/server.csr -signkey /data/ssl/server.key -out /data/ssl/server.crt
 fi
 
 if [[ ! -e "/data/ssl/dhparam.pem" ]]; then
-    openssl dhparam -out dhparam.pem 4096
-fi
-
-if [[ ! -d "/data/logs" ]]; then
-	mkdir -p /data/logs
+    openssl dhparam -out /data/ssl/dhparam.pem 2048
 fi
 
 if [[ ! -e "/data/config/pagespeed-extra.conf" ]]; then
@@ -47,7 +34,8 @@ fi
 if [[ ! -e "/data/config/proxy.conf" ]]; then
     touch /data/config/proxy.conf
 else
-    echo -n | tee /data/config/proxy.conf
+    rm /data/config/proxy.conf
+    touch /data/config/proxy.conf
 fi
 
-/usr/local/bin/forego start -r
+/usr/local/bin/forego start -f /app/Procfile -r
