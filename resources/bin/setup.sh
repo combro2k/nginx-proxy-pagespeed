@@ -131,6 +131,8 @@ install_nginx() {
         --with-http_ssl_module \
         --with-http_v2_module \
         --with-openssl=../boringssl \
+        --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
+        --with-ld-opt='-Wl,-z,relro -Wl,--as-needed' \
         ${ADD_MODULES} || return 1
 
     touch -r Makefile ../boringssl/.openssl/include/openssl/ssl.h 2>&1 || return 1
