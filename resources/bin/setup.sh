@@ -115,6 +115,8 @@ install_nginx() {
         --with-http_ssl_module \
         --with-http_v2_module \
         --with-openssl=../openssl \
+        --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
+        --with-ld-opt='-Wl,-z,relro -Wl,--as-needed' \
         ${ADD_MODULES} || return 1
 
     make 2>&1 || return 1
