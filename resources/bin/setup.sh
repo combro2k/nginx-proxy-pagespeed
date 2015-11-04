@@ -6,10 +6,10 @@ declare -A NGX_MODULES
 export DEBIAN_FRONTEND="noninteractive"
 
 # Versions
-export NGINX_VERSION="1.9.5"
+export NGINX_VERSION="1.9.6"
 export NPS_VERSION="1.9.32.10"
-export DOCKER_GEN="0.4.2"
-export LIBRESSL_VERSION=2.2.4
+export DOCKER_GEN="0.4.3"
+export LIBRESSL_VERSION=2.3.1
 
 # Build options
 export CFLAGS="-Wno-error"
