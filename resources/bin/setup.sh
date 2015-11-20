@@ -6,13 +6,10 @@ declare -A NGX_MODULES
 export DEBIAN_FRONTEND="noninteractive"
 
 # Versions
-export NGINX_VERSION="1.9.6"
+export NGINX_VERSION="1.9.7"
 export NPS_VERSION="1.9.32.10"
 export DOCKER_GEN="0.4.3"
 export OPENSSL_VERSION="1.0.2d"
-
-# Build options
-export CFLAGS="-Wno-error"
 
 # Packages
 export PACKAGES=(
@@ -115,8 +112,8 @@ install_nginx() {
         --with-http_ssl_module \
         --with-http_v2_module \
         --with-openssl=../openssl \
-        --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
-        --with-ld-opt='-Wl,-z,relro -Wl,--as-needed' \
+        --with-cc-opt="-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2" \
+        --with-ld-opt="-Wl,-z,relro -Wl,-z,now -Wl,--as-needed" \
         ${ADD_MODULES} || return 1
 
     make 2>&1 || return 1
@@ -149,7 +146,8 @@ build() {
 	for task in ${tasks[@]}
 	do
 		echo "Running build task ${task}..." || exit 1
-		${task} | tee -a "${INSTALL_LOG}" > /dev/null 2>&1 || exit 1
+		#${task} | tee -a "${INSTALL_LOG}" > /dev/null 2>&1 || exit 1
+		${task} | tee -a "${INSTALL_LOG}" || exit 1
 	done
 }
 
