@@ -19,6 +19,7 @@ export PACKAGES=(
 	'git'
 	'build-essential'
 	'cmake'
+	'zlib1g'
 	'zlib1g-dev'
 	'libpcre3'
 	'libpcre3-dev'
@@ -105,7 +106,7 @@ install_nginx() {
 
     cd /usr/src/build/nginx || return 1
 
-    patch -p1 < /usr/src/patches/nginx.patch || return 1
+    patch -p0 < /usr/src/patches/nginx.patch || return 1
 
     ./configure \
         --prefix=/etc/nginx \
@@ -133,6 +134,8 @@ install_nginx() {
         --with-openssl=../boringssl \
         --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
         --with-ld-opt='-Wl,-z,relro -Wl,--as-needed' \
+        --user='www-data' \
+        --group='www-data' \
         ${ADD_MODULES} || return 1
 
     touch -r Makefile ../boringssl/.openssl/include/openssl/ssl.h 2>&1 || return 1

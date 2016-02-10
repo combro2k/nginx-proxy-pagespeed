@@ -1,8 +1,11 @@
-diff --git a/src/event/ngx_event_openssl.c b/src/event/ngx_event_openssl.c
-index 1b789e6..00d2448 100644
---- a/src/event/ngx_event_openssl.c
-+++ b/src/event/ngx_event_openssl.c
-@@ -1905,7 +1905,9 @@ ngx_ssl_connection_error(ngx_connection_t *c, int sslerr, ngx_err_t err,
+Index: src/event/ngx_event_openssl.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/event/ngx_event_openssl.c	(revision )
++++ src/event/ngx_event_openssl.c	(revision )
+@@ -1909,13 +1909,17 @@
 
              /* handshake failures */
          if (n == SSL_R_BAD_CHANGE_CIPHER_SPEC                        /*  103 */
@@ -12,3 +15,11 @@ index 1b789e6..00d2448 100644
              || n == SSL_R_DIGEST_CHECK_FAILED                        /*  149 */
              || n == SSL_R_ERROR_IN_RECEIVED_CIPHER_LIST              /*  151 */
              || n == SSL_R_EXCESSIVE_MESSAGE_SIZE                     /*  152 */
+             || n == SSL_R_LENGTH_MISMATCH                            /*  159 */
+             || n == SSL_R_NO_CIPHERS_PASSED                          /*  182 */
++#ifdef SSL_R_NO_CIPHERS_SPECIFIED
+             || n == SSL_R_NO_CIPHERS_SPECIFIED                       /*  183 */
++#endif
+             || n == SSL_R_NO_COMPRESSION_SPECIFIED                   /*  187 */
+             || n == SSL_R_NO_SHARED_CIPHER                           /*  193 */
+             || n == SSL_R_RECORD_LENGTH_MISMATCH                     /*  213 */
