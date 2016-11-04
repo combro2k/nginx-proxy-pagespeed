@@ -6,9 +6,9 @@ declare -A NGX_MODULES
 export DEBIAN_FRONTEND="noninteractive"
 
 # Versions
-export NGINX_VERSION="1.9.11"
-export NPS_VERSION="1.10.33.6"
-export DOCKER_GEN="0.5.0"
+export NGINX_VERSION="1.11.5"
+export NPS_VERSION="1.11.33.4"
+export DOCKER_GEN="0.7.3"
 
 # Build options
 export CFLAGS="-Wno-error"
