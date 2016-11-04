@@ -116,7 +116,9 @@ install_nginx() {
         --with-http_v2_module \
         --with-openssl=../libressl \
         --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
-        --with-ld-opt='-lrt,-Wl,-z,relro -Wl,--as-needed' \
+        --with-ld-opt='-Wl,-z,relro -Wl,--as-needed' \
+		--user='www-data' \
+        --group='www-data' \
         ${ADD_MODULES} || return 1
 
     make 2>&1 || return 1
