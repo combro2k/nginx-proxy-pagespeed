@@ -43,7 +43,7 @@ pre_install() {
 	apt-get update -q 2>&1 || return 1
 	apt-get install -yq ${PACKAGES[@]} 2>&1 || return 1
 
-    curl -L --silent https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz --output /usr/local/bin/forego 2>&1 || return 1
+    curl -L --silent https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz | tar zxv -C /usr/local/bin/ 2>&1 || return 1
     curl -L --silent https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN}/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zx -C /app 2>&1 || return 1
 
     chmod +x /usr/local/bin/* || return 1
