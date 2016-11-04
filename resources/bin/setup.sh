@@ -46,7 +46,7 @@ pre_install() {
 	apt-get update -q 2>&1 || return 1
 	apt-get install -yq ${PACKAGES[@]} 2>&1 || return 1
 
-    curl -L --silent https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego --output /usr/local/bin/forego 2>&1 || return 1
+    curl -L --silent https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz --output /usr/local/bin/forego 2>&1 || return 1
     curl -L --silent https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN}/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zx -C /app 2>&1 || return 1
 
     chmod +x /usr/local/bin/* || return 1
@@ -128,7 +128,7 @@ install_nginx() {
         --with-http_secure_link_module \
         --with-http_stub_status_module \
         --with-file-aio \
-        --with-ipv6 \
+        --with-compat \
         --with-http_ssl_module \
         --with-http_v2_module \
         --with-openssl=../boringssl \
