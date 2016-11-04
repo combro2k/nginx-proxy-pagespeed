@@ -46,7 +46,7 @@ pre_install() {
 	apt-get update -q 2>&1 || return 1
 	apt-get install -yq ${PACKAGES[@]} 2>&1 || return 1
 
-    curl -L --silent https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego --output /usr/local/bin/forego 2>&1 || return 1
+    curl -L --silent https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz --output /usr/local/bin/forego 2>&1 || return 1
     curl -L --silent https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN}/docker-gen-linux-amd64-${DOCKER_GEN}.tar.gz | tar zx -C /app 2>&1 || return 1
 
     chmod +x /usr/local/bin/* || return 1
@@ -78,14 +78,6 @@ install_nginx_modules() {
 install_libressl() {
     mkdir -p /usr/src/build/libressl || return 1
     curl -L --silent http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz | tar zx -C /usr/src/build/libressl --strip-components=1
-
-    cd /usr/src/build/libressl || return 1
-
-    ./configure \
-        LDFLAGS=-lrt \
-        --prefix=/usr/src/build/libressl/.openssl/ || return 1
-
-    make install-strip || return 1
 
     return 0
 }
@@ -119,15 +111,13 @@ install_nginx() {
         --with-http_secure_link_module \
         --with-http_stub_status_module \
         --with-file-aio \
-        --with-ipv6 \
+        --with-compat \
         --with-http_ssl_module \
         --with-http_v2_module \
         --with-openssl=../libressl \
         --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
         --with-ld-opt='-lrt,-Wl,-z,relro -Wl,--as-needed' \
         ${ADD_MODULES} || return 1
-
-    touch -r Makefile ../libressl/.openssl/include/openssl/ssl.h 2>&1 || return 1
 
     make 2>&1 || return 1
     make install 2>&1 || return 1
@@ -160,7 +150,7 @@ build() {
 	for task in ${tasks[@]}
 	do
 		echo "Running build task ${task}..." || exit 1
-		${task} | tee -a "${INSTALL_LOG}" > /dev/null 2>&1 || exit 1
+		${task} | tee -a "${INSTALL_LOG}" || exit 1
 	done
 }
 
