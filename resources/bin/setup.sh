@@ -6,10 +6,10 @@ declare -A NGX_MODULES
 export DEBIAN_FRONTEND="noninteractive"
 
 # Versions
-export NGINX_VERSION="1.11.5"
-export NPS_VERSION="1.11.33.4"
+export NGINX_VERSION="1.11.12"
+export NPS_VERSION="1.12.34.2"
 export DOCKER_GEN="0.7.3"
-export OPENSSL_VERSION="1.1.0b"
+export OPENSSL_VERSION="1.1.0e"
 
 # Packages
 export PACKAGES=(
