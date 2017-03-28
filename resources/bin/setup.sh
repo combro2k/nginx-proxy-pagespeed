@@ -55,8 +55,8 @@ install_nginx_modules() {
     mkdir -p /usr/src/build/nginx-modules/ngx_pagespeed || return 1
 
     echo "Installing ngx_pagespeed..." || return 1
-    curl -L --silent https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.tar.gz | tar zx --strip-components=1 -C /usr/src/build/nginx-modules/ngx_pagespeed 2>&1  || return 1
-    curl -L --silent https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}.tar.gz | tar zx -C /usr/src/build/nginx-modules/ngx_pagespeed 2>&1 || return 1
+    curl -L --silent https://github.com/pagespeed/ngx_pagespeed/archive/v${NPS_VERSION}-beta.tar.gz | tar zx --strip-components=1 -C /usr/src/build/nginx-modules/ngx_pagespeed 2>&1  || return 1
+    curl -L --silent https://dl.google.com/dl/page-speed/psol/${NPS_VERSION}-x64.tar.gz | tar zx -C /usr/src/build/nginx-modules/ngx_pagespeed 2>&1 || return 1
 
     cd /usr/src/build/nginx-modules/ngx_pagespeed || return 1
 
