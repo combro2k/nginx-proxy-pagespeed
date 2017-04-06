@@ -32,6 +32,7 @@ export PACKAGES=(
 export NGX_MODULES=(
     ['ngx_http_enhanced_memcached_module']='https://github.com/bpaquet/ngx_http_enhanced_memcached_module.git'
     ['headers-more-nginx-module']='https://github.com/openresty/headers-more-nginx-module.git'
+    ['ngx_brotli']='https://github.com/google/ngx_brotli.git'
 )
 
 pre_install() {
@@ -69,7 +70,7 @@ install_nginx_modules() {
     for i in ${!NGX_MODULES[@]}
     do
         echo "Installing ${i}..." || return 1
-        git clone -q "${NGX_MODULES[${i}]}" ./${i} 2>&1 || return 1
+        git clone -q --recursive --single-branch "${NGX_MODULES[${i}]}" ./${i} 2>&1 || return 1
     done
 
     return 0
