@@ -6,7 +6,7 @@ declare -A NGX_MODULES
 export DEBIAN_FRONTEND="noninteractive"
 
 # Versions
-export NGINX_VERSION="1.11.13"
+export NGINX_VERSION="1.12.0"
 export NPS_VERSION="1.12.34.2"
 export DOCKER_GEN="0.7.3"
 
