@@ -38,6 +38,11 @@
 
         gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
+	add_header X-Frame-Options SAMEORIGIN;
+	add_header X-Content-Type-Options nosniff;
+	add_header X-XSS-Protection "1; mode=block";
+	add_header Content-Security-Policy: script-src 'self';
+
         server_name  {{ $host }};
 
         {{ if (exists (printf "/data/config/%s-extra.conf" $host)) }}
@@ -77,6 +82,11 @@
         {{ if (exists (printf "/data/config/%s-extra.conf" $host)) }}
         include /data/config/{{ $host }}-extra.conf;
         {{ end }}
+	
+	add_header X-Frame-Options SAMEORIGIN;
+	add_header X-Content-Type-Options nosniff;
+	add_header X-XSS-Protection "1; mode=block";
+	add_header Content-Security-Policy: script-src 'self';
 
         {{ range $index, $value := $containers }}
             {{ if $value.Env.SSL_ONLY }}
@@ -136,6 +146,10 @@ server {
     include /data/config/{{ $host }}-extra.conf;
     {{ end }}
 
+    add_header X-Frame-Options SAMEORIGIN;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Content-Security-Policy: script-src 'self';
     add_header Strict-Transport-Security max-age=15768000;
 
     {{ range $index, $value := $containers }}
