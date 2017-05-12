@@ -41,7 +41,6 @@
 	add_header X-Frame-Options SAMEORIGIN;
 	add_header X-Content-Type-Options nosniff;
 	add_header X-XSS-Protection "1; mode=block";
-	add_header Content-Security-Policy: script-src 'self';
 
         server_name  {{ $host }};
 
@@ -86,7 +85,6 @@
 	add_header X-Frame-Options SAMEORIGIN;
 	add_header X-Content-Type-Options nosniff;
 	add_header X-XSS-Protection "1; mode=block";
-	add_header Content-Security-Policy: script-src 'self';
 
         {{ range $index, $value := $containers }}
             {{ if $value.Env.SSL_ONLY }}
@@ -149,7 +147,6 @@ server {
     add_header X-Frame-Options SAMEORIGIN;
     add_header X-Content-Type-Options nosniff;
     add_header X-XSS-Protection "1; mode=block";
-    add_header Content-Security-Policy: script-src 'self';
     add_header Strict-Transport-Security max-age=15768000;
 
     {{ range $index, $value := $containers }}
