@@ -118,7 +118,7 @@ install_nginx() {
         --with-openssl=../libressl \
         --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
         --with-ld-opt='-Wl,-z,relro -Wl,--as-needed' \
-		--user='www-data' \
+	--user='www-data' \
         --group='www-data' \
         ${ADD_MODULES} || return 1
 
@@ -130,7 +130,8 @@ install_nginx() {
 
 
 post_install() {
-    apt-get autoremove 2>&1 || return 1
+	apt-get purge build-essential zlib1g-dev libpcre3-dev libpthread-stubs0-dev:amd64 2>&1 || return 1
+	apt-get autoremove --purge 2>&1 || return 1
 	apt-get autoclean 2>&1 || return 1
 	rm -fr /var/lib/apt /usr/src/build 2>&1 || return 1
 
